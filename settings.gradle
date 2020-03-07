@@ -1,0 +1,2 @@
+rootProject.name='NITCTravelTogether'
+include ':app'

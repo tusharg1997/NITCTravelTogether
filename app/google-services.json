@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "13571128392",
+    "firebase_url": "https://nitctraveltogether-a535a.firebaseio.com",
+    "project_id": "nitctraveltogether-a535a",
+    "storage_bucket": "nitctraveltogether-a535a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:13571128392:android:7fbcf6476ed29b9ff2ec7d",
+        "android_client_info": {
+          "package_name": "com.example.nitctraveltogether"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "13571128392-9gq4e5op272n6r5auo400i5pkhg5idrs.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.nitctraveltogether",
+            "certificate_hash": "0b448b12ec00758964079ee999cb11a35118de86"
+          }
+        },
+        {
+          "client_id": "13571128392-rqsfju45iqtm3bogu4l610jb5hls9hgi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBSdwp93ZxVO37Xe65o9LEYdVUeNaJBWWc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "13571128392-rqsfju45iqtm3bogu4l610jb5hls9hgi.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
