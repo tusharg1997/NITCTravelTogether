@@ -8,6 +8,7 @@
     <string name="signin_redirect">Already a member? Sign in!</string>
     <string name="forgot_password">Forgot password?</string>
     <string name="signup_redirect">Don\'t have an account? Register here!</string>
+
     <string name="pass">Enter Password</string>
     <string name="name">Enter name</string>
     <string name="last_name">Enter last name</string>
@@ -18,5 +19,9 @@
     <string name="firstName">First Name</string>
     <string name="lastName">Last Name</string>
     <string name="title_activity_main_screen">Map</string>
+
+
+    <string name="title_activity_home">Map</string>
+    <string name="title_activity_demo">Map</string>
 
 </resources>

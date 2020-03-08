@@ -35,7 +35,7 @@ public class  MainActivity extends AppCompatActivity {
         actionBar.setBackgroundDrawable(colorDrawable);
         mAuth = FirebaseAuth.getInstance();
     }
-
+    //Register Code
     public void register(View view)
     {
         Intent i = new Intent(this, Registration.class );
@@ -50,6 +50,7 @@ public class  MainActivity extends AppCompatActivity {
         }
         return flag;
     }
+    //Login Code
     public void login(View view)
     {
         AutoCompleteTextView emailv,passwordv;
@@ -73,9 +74,10 @@ public class  MainActivity extends AppCompatActivity {
                                 Toast.makeText(MainActivity.this, "Authentication Success.",
                                         Toast.LENGTH_SHORT).show();
                                 FirebaseUser user = mAuth.getCurrentUser();
-                                //Intent i  = new Intent(MainActivity.this, MainScreen.class);
-                                //startActivity(i);
-                               // finish();
+
+                                Intent i=new Intent(MainActivity.this, home.class);
+                                startActivity(i);
+
                             }
                             else{
                                 Toast.makeText(MainActivity.this, "Please verify your email.",

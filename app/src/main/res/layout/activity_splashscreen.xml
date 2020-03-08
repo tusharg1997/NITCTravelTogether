@@ -9,15 +9,17 @@
 
     <TextView
         android:id="@+id/projectname"
-        android:layout_width="398dp"
-        android:layout_height="157dp"
+        android:layout_width="400dp"
+        android:layout_height="140dp"
         android:fontFamily="monospace"
         android:text="NITC Travel Together"
         android:textColor="#FFFFFF"
-        android:textSize="60dp"
+        android:textSize="55dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.499"
         tools:text="NITC Travel Together" />
 </androidx.constraintlayout.widget.ConstraintLayout>
