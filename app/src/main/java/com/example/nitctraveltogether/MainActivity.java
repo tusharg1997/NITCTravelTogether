@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -34,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
         actionBar.setBackgroundDrawable(colorDrawable);
         mAuth = FirebaseAuth.getInstance();
     }
-
+    //Register Code
     public void register(View view)
     {
         final AutoCompleteTextView email,password;
@@ -77,6 +78,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
     }
+    //Login Code
     public void login(View view)
     {
         AutoCompleteTextView emailv,passwordv;
@@ -95,6 +97,8 @@ public class MainActivity extends AppCompatActivity {
                                 Toast.makeText(MainActivity.this, "Authentication Success.",
                                         Toast.LENGTH_SHORT).show();
                                 FirebaseUser user = mAuth.getCurrentUser();
+                                Intent i=new Intent(MainActivity.this, home.class);
+                                startActivity(i);
                             }
                             else{
                                 Toast.makeText(MainActivity.this, "Please verify your email.",
