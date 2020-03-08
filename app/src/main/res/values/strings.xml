@@ -8,4 +8,5 @@
     <string name="signin_redirect">Already a member? Sign in!</string>
     <string name="forgot_password">Forgot password?</string>
     <string name="signup_redirect">Don\'t have an account? Register here!</string>
+    <string name="title_activity_home">Map</string>
 </resources>
