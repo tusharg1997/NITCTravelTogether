@@ -18,7 +18,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-public class MainActivity extends AppCompatActivity {
+public class  MainActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener firebaseAuthListener;
@@ -38,45 +38,17 @@ public class MainActivity extends AppCompatActivity {
     //Register Code
     public void register(View view)
     {
-        final AutoCompleteTextView email,password;
+        Intent i = new Intent(this, Registration.class );
+        startActivity(i);
 
-
-        email=findViewById(R.id.email);
-        password=findViewById(R.id.password);
-
-
-        final String remail=email.getText().toString();
-        final String rpassword=password.getText().toString();
-        mAuth.createUserWithEmailAndPassword(remail, rpassword)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            mAuth.getCurrentUser().sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    if(task.isSuccessful())
-                                    {
-                                        FirebaseUser user = mAuth.getCurrentUser();
-                                        Toast.makeText(MainActivity.this, "Email Registered, Please check your email for verification",
-                                                Toast.LENGTH_SHORT).show();
-
-                                    }else{
-                                        Toast.makeText(MainActivity.this, task.getException().getMessage(),
-                                                Toast.LENGTH_SHORT).show();
-                                    }
-
-                                }
-                            });
-
-                        } else {
-
-                            Toast.makeText(MainActivity.this, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
-
-                        }
-                    }
-                });
+    }
+    boolean validateInput(String email, String pass){
+        boolean flag = true;
+        if(email.isEmpty() || pass.isEmpty()){
+            flag = false;
+            Toast.makeText(this, "Enter All the Fields", Toast.LENGTH_SHORT).show();
+        }
+        return flag;
     }
     //Login Code
     public void login(View view)
@@ -87,6 +59,11 @@ public class MainActivity extends AppCompatActivity {
 
         String email=emailv.getText().toString();
         String password=passwordv.getText().toString();
+        // check whether both filled are full or not
+            if(validateInput(email,password) == false){
+
+                return;
+            }
 
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -97,8 +74,10 @@ public class MainActivity extends AppCompatActivity {
                                 Toast.makeText(MainActivity.this, "Authentication Success.",
                                         Toast.LENGTH_SHORT).show();
                                 FirebaseUser user = mAuth.getCurrentUser();
+
                                 Intent i=new Intent(MainActivity.this, home.class);
                                 startActivity(i);
+
                             }
                             else{
                                 Toast.makeText(MainActivity.this, "Please verify your email.",
