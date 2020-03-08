@@ -9,4 +9,5 @@
     <string name="forgot_password">Forgot password?</string>
     <string name="signup_redirect">Don\'t have an account? Register here!</string>
     <string name="title_activity_home">Map</string>
+    <string name="title_activity_demo">Map</string>
 </resources>
