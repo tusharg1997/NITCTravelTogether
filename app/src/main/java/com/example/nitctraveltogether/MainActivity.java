@@ -77,7 +77,7 @@ public class  MainActivity extends AppCompatActivity {
 
                                 Intent i=new Intent(MainActivity.this, home.class);
                                 startActivity(i);
-
+                                finish();
                             }
                             else{
                                 Toast.makeText(MainActivity.this, "Please verify your email.",

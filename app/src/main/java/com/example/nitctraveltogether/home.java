@@ -15,8 +15,13 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
+import com.firebase.geofire.GeoFire;
+import com.firebase.geofire.GeoLocation;
+import com.firebase.geofire.GeoQuery;
+import com.firebase.geofire.GeoQueryEventListener;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationRequest;
@@ -25,18 +30,28 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class home extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
-    GoogleApiClient googleApiClient;
+
     Location lastLocation;
     LocationManager locationManager;
     LocationListener locationListener;
     LocationRequest locationRequest;
+    DatabaseReference databaseuser;
     private static final int MY_PERMISSION_REQUEST_READ_FINE_LOCATION = 100;
 
     @Override
@@ -47,6 +62,9 @@ public class home extends FragmentActivity implements OnMapReadyCallback {
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+//        FirebaseDatabase data =  FirebaseDatabase.getInstance();
+//        databaseuser = FirebaseDatabase.getInstance().getReference("userlocation");
+
     }
 
 
@@ -59,6 +77,7 @@ public class home extends FragmentActivity implements OnMapReadyCallback {
      * it inside the SupportMapFragment. This method will only be triggered once the user has
      * installed Google Play services and returned to the app.
      */
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
@@ -75,7 +94,17 @@ public class home extends FragmentActivity implements OnMapReadyCallback {
                 mMap.addMarker(new MarkerOptions().position(userLocation).title("Your Location"));
                 mMap.moveCamera(CameraUpdateFactory.newLatLng(userLocation));
                 mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
+//                String id = databaseuser.push().getKey();
+//
+//                databaseuser.child(id).child("latitude").setValue(location.getLatitude());
+//                databaseuser.child(id).child("longitude").setValue(location.getLongitude());
+                String id= FirebaseAuth.getInstance().getCurrentUser().getUid();
+                DatabaseReference ref= FirebaseDatabase.getInstance().getReference("userlocation");
 
+                GeoFire geoFire= new GeoFire(ref);
+                geoFire.setLocation(id, new GeoLocation(location.getLatitude(),location.getLongitude()));
+                if(!getuseraroundstarted)
+                    getusersaround();
             }
 
             @Override
@@ -119,14 +148,20 @@ public class home extends FragmentActivity implements OnMapReadyCallback {
                 locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
 
                 Location lastKnownLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-
+                lastLocation=lastKnownLocation;
                 LatLng userLocation = new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude());
                 mMap.clear();
 
                 mMap.addMarker(new MarkerOptions().position(userLocation).title("Your Location"));
                 mMap.moveCamera(CameraUpdateFactory.newLatLng(userLocation));
                 mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
+                String id= FirebaseAuth.getInstance().getCurrentUser().getUid();
+                DatabaseReference ref= FirebaseDatabase.getInstance().getReference("userlocation");
 
+                GeoFire geoFire= new GeoFire(ref);
+                geoFire.setLocation(id, new GeoLocation(lastKnownLocation.getLatitude(),lastKnownLocation.getLongitude()));
+                if(!getuseraroundstarted)
+                    getusersaround();
             }
 
 
@@ -155,6 +190,74 @@ public class home extends FragmentActivity implements OnMapReadyCallback {
         }
 
     }
+    boolean getuseraroundstarted=false;
+    List<Marker> markers = new ArrayList<Marker>();
+    private void getusersaround(){
+        getuseraroundstarted=true;
+        Toast.makeText(home.this,"Entered in function",Toast.LENGTH_LONG).show();
+        DatabaseReference userslocation =FirebaseDatabase.getInstance().getReference().child("userlocation");
+        GeoFire geofire= new GeoFire(userslocation);
+        GeoQuery geoQuery= geofire.queryAtLocation(new GeoLocation(lastLocation.getLatitude(),lastLocation.getLongitude()),10000);
+        geoQuery.addGeoQueryEventListener(new GeoQueryEventListener() {
+            @Override
+            public void onKeyEntered(String key, GeoLocation location) {
 
+                for(Marker markerIt : markers){
+                    if(markerIt.getTag().equals(key))
+                        return;
+                }
+                Toast.makeText(home.this,"before location",Toast.LENGTH_LONG).show();
+               Toast.makeText(home.this,String.valueOf(location.latitude)+" "+String.valueOf(location.longitude),Toast.LENGTH_LONG).show();
+                LatLng userLocation = new LatLng(location.latitude, location.longitude);
+
+                Marker muserMarker = mMap.addMarker(new MarkerOptions().position(userLocation).title(key).icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_car)));
+                muserMarker.setTag(key);
+
+                markers.add(muserMarker);
+            }
+
+            @Override
+            public void onKeyExited(String key) {
+
+                for(Marker markerIt : markers){
+                    if(markerIt.getTag().equals(key)){
+                        markerIt.remove();
+                        markers.remove(markerIt);
+                    }
+                }
+            }
+
+            @Override
+            public void onKeyMoved(String key, GeoLocation location) {
+
+                for(Marker markerIt : markers){
+                    if(markerIt.getTag().equals(key)){
+                        markerIt.setPosition(new LatLng(location.latitude, location.longitude));
+                    }
+                }
+            }
+
+            @Override
+            public void onGeoQueryReady() {
+
+            }
+
+            @Override
+            public void onGeoQueryError(DatabaseError error) {
+
+            }
+        });
+
+    }
+//    @Override
+//    public void onStop()
+//    {
+//        super.onStop();
+//        String id= FirebaseAuth.getInstance().getCurrentUser().getUid();
+//        DatabaseReference ref= FirebaseDatabase.getInstance().getReference("userlocation");
+//
+//        GeoFire geoFire= new GeoFire(ref);
+//        geoFire.removeLocation(id);
+//    }
 
 }

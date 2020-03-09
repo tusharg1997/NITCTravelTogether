@@ -37,7 +37,7 @@ public class Registration extends AppCompatActivity {
         String id = databaseuser.push().getKey();
         User user = new User(remail,rpassword, rfname, rlname, rphone, rage );
         databaseuser.child(id).setValue(user);
-        Toast.makeText(this, "User added", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Registered Successfully, please go to your email and verify your email id.", Toast.LENGTH_SHORT).show();
 
     }
 
@@ -59,7 +59,7 @@ public class Registration extends AppCompatActivity {
         }
         else {
             String str = remail.substring(email.length() - 11);
-            if (str.equalsIgnoreCase("@nitc.ac.in")) {
+            if (!str.equalsIgnoreCase("@nitc.ac.in")) {
                 Toast.makeText(this, "Enter NITC email id", Toast.LENGTH_SHORT).show();
                 flag = false;
             }
@@ -94,8 +94,8 @@ public class Registration extends AppCompatActivity {
                                     if(task.isSuccessful())
                                     {
                                         FirebaseUser user = mAuth.getCurrentUser();
-                                        Toast.makeText(Registration.this, "Email Registered, Please check your email for verification",
-                                                Toast.LENGTH_SHORT).show();
+//                                        Toast.makeText(Registration.this, "Email Registered, Please check your email for verification",
+//                                                Toast.LENGTH_SHORT).show();
                                         saveToDatabase(remail, rpassword, rfname, rlname, rphone, rage);
 
 
