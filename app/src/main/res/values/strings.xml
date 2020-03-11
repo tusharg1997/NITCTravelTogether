@@ -20,8 +20,37 @@
     <string name="lastName">Last Name</string>
     <string name="title_activity_main_screen">Map</string>
 
+    <string name="destination">Enter Destination</string>
+    <string name="seat">Enter No. of Seats</string>
+    <string name="vehicle">Enter vehicle type(2/3/4 vehiler)</string>
+    <string name="title_activity_home">NITC Travel Together</string>
 
-    <string name="title_activity_home">Map</string>
-    <string name="title_activity_demo">Map</string>
+
+
+
+
+    <string name="title_activity_drawer">Drawer</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="menu_home">Home</string>
+    <string name="menu_gallery">Gallery</string>
+    <string name="menu_slideshow">Slideshow</string>
+
+    <string name="home_second">Home Second</string>
+    <string name="Offerlift">Offer LIft</string>
+    <string name="logout">Logout</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="needlift">Need Lift</string>
+    <string name="sharefare">Share Fare</string>
+    <string name="map">Map</string>
+
+    <string name="title_activity_firstpage">firstpage</string>
 
 </resources>

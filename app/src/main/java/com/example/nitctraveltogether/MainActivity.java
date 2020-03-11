@@ -22,6 +22,7 @@ public class  MainActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener firebaseAuthListener;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,6 +35,11 @@ public class  MainActivity extends AppCompatActivity {
                 = new ColorDrawable(Color.parseColor("#ff000000"));
         actionBar.setBackgroundDrawable(colorDrawable);
         mAuth = FirebaseAuth.getInstance();
+        FirebaseUser user = mAuth.getCurrentUser();
+        if(user!=null)
+        {Intent i=new Intent(MainActivity.this, home.class);
+        startActivity(i);
+        finish();}
     }
     //Register Code
     public void register(View view)

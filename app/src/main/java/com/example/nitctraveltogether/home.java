@@ -2,20 +2,30 @@ package com.example.nitctraveltogether;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.ui.AppBarConfiguration;
+import androidx.navigation.ui.NavigationUI;
 
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.View;
 import android.widget.Toast;
 
 import com.firebase.geofire.GeoFire;
@@ -43,7 +53,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class home extends FragmentActivity implements OnMapReadyCallback {
+public class home extends AppCompatActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
 
@@ -52,18 +62,33 @@ public class home extends FragmentActivity implements OnMapReadyCallback {
     LocationListener locationListener;
     LocationRequest locationRequest;
     DatabaseReference databaseuser;
+    GeoLocation geoLocation;
+
     private static final int MY_PERMISSION_REQUEST_READ_FINE_LOCATION = 100;
+
+    public void travel(View view)
+    {
+        Toast.makeText(this,"Going to drawer",Toast.LENGTH_SHORT).show();
+       Intent i=new Intent(home.this, Drawer.class);
+
+       startActivity(i);
+       finish();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+        ActionBar actionBar;
+        actionBar = getSupportActionBar();
+
+        ColorDrawable colorDrawable
+                = new ColorDrawable(Color.parseColor("#ff000000"));
+        actionBar.setBackgroundDrawable(colorDrawable);
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-//        FirebaseDatabase data =  FirebaseDatabase.getInstance();
-//        databaseuser = FirebaseDatabase.getInstance().getReference("userlocation");
+
 
     }
 
@@ -89,22 +114,19 @@ public class home extends FragmentActivity implements OnMapReadyCallback {
             public void onLocationChanged(Location location) {
 
                 LatLng userLocation = new LatLng(location.getLatitude(), location.getLongitude());
-                Toast.makeText(getApplicationContext() ," "+location.getLongitude()+" "+location.getLongitude() , Toast.LENGTH_LONG).show();
+//                Toast.makeText(getApplicationContext() ," "+location.getLongitude()+" "+location.getLongitude() , Toast.LENGTH_LONG).show();
                 mMap.clear();
-                mMap.addMarker(new MarkerOptions().position(userLocation).title("Your Location"));
+                mMap.addMarker(new MarkerOptions().position(userLocation).title("Your Location").icon(BitmapDescriptorFactory.fromResource(R.mipmap.cur)));
                 mMap.moveCamera(CameraUpdateFactory.newLatLng(userLocation));
-                mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
-//                String id = databaseuser.push().getKey();
+                mMap.animateCamera(CameraUpdateFactory.zoomTo(13));
 //
-//                databaseuser.child(id).child("latitude").setValue(location.getLatitude());
-//                databaseuser.child(id).child("longitude").setValue(location.getLongitude());
-                String id= FirebaseAuth.getInstance().getCurrentUser().getUid();
-                DatabaseReference ref= FirebaseDatabase.getInstance().getReference("userlocation");
-
-                GeoFire geoFire= new GeoFire(ref);
-                geoFire.setLocation(id, new GeoLocation(location.getLatitude(),location.getLongitude()));
-                if(!getuseraroundstarted)
-                    getusersaround();
+//                String id= FirebaseAuth.getInstance().getCurrentUser().getUid();
+//                DatabaseReference ref= FirebaseDatabase.getInstance().getReference("userlocation");
+//
+//                GeoFire geoFire= new GeoFire(ref);
+//                geoFire.setLocation(id, new GeoLocation(location.getLatitude(),location.getLongitude()));
+//                if(!getuseraroundstarted)
+//                    getusersaround();
             }
 
             @Override
@@ -125,7 +147,7 @@ public class home extends FragmentActivity implements OnMapReadyCallback {
 
         if (Build.VERSION.SDK_INT < 23) {
 
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.checkSelfPermission(home.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 // TODO: Consider calling
                 //    ActivityCompat#requestPermissions
                 // here to request the missing permissions, and then overriding
@@ -139,9 +161,9 @@ public class home extends FragmentActivity implements OnMapReadyCallback {
 
         } else {
 
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            if (ContextCompat.checkSelfPermission(home.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+                ActivityCompat.requestPermissions(home.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
 
             } else {
 
@@ -152,15 +174,16 @@ public class home extends FragmentActivity implements OnMapReadyCallback {
                 LatLng userLocation = new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude());
                 mMap.clear();
 
-                mMap.addMarker(new MarkerOptions().position(userLocation).title("Your Location"));
+                mMap.addMarker(new MarkerOptions().position(userLocation).title("Your Location").icon(BitmapDescriptorFactory.fromResource(R.mipmap.cur)));
                 mMap.moveCamera(CameraUpdateFactory.newLatLng(userLocation));
-                mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
+                mMap.animateCamera(CameraUpdateFactory.zoomTo(13));
                 String id= FirebaseAuth.getInstance().getCurrentUser().getUid();
                 DatabaseReference ref= FirebaseDatabase.getInstance().getReference("userlocation");
 
                 GeoFire geoFire= new GeoFire(ref);
                 geoFire.setLocation(id, new GeoLocation(lastKnownLocation.getLatitude(),lastKnownLocation.getLongitude()));
-                if(!getuseraroundstarted)
+                geoLocation=new GeoLocation(lastKnownLocation.getLatitude(),lastKnownLocation.getLongitude());
+
                     getusersaround();
             }
 
@@ -176,7 +199,7 @@ public class home extends FragmentActivity implements OnMapReadyCallback {
 
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
-                if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                if (ContextCompat.checkSelfPermission(home.this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                     {
 
                         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
@@ -194,23 +217,25 @@ public class home extends FragmentActivity implements OnMapReadyCallback {
     List<Marker> markers = new ArrayList<Marker>();
     private void getusersaround(){
         getuseraroundstarted=true;
-        Toast.makeText(home.this,"Entered in function",Toast.LENGTH_LONG).show();
+        // Toast.makeText(firstpage.this,"Entered in function",Toast.LENGTH_LONG).show();
         DatabaseReference userslocation =FirebaseDatabase.getInstance().getReference().child("userlocation");
         GeoFire geofire= new GeoFire(userslocation);
         GeoQuery geoQuery= geofire.queryAtLocation(new GeoLocation(lastLocation.getLatitude(),lastLocation.getLongitude()),10000);
         geoQuery.addGeoQueryEventListener(new GeoQueryEventListener() {
             @Override
             public void onKeyEntered(String key, GeoLocation location) {
-
+                if(location.equals(geoLocation))
+                    return;
                 for(Marker markerIt : markers){
                     if(markerIt.getTag().equals(key))
                         return;
                 }
-                Toast.makeText(home.this,"before location",Toast.LENGTH_LONG).show();
-               Toast.makeText(home.this,String.valueOf(location.latitude)+" "+String.valueOf(location.longitude),Toast.LENGTH_LONG).show();
+                // Toast.makeText(firstpage.this,"before location",Toast.LENGTH_LONG).show();
+                // Toast.makeText(firstpage.this,String.valueOf(location.latitude)+" "+String.valueOf(location.longitude),Toast.LENGTH_LONG).show();
                 LatLng userLocation = new LatLng(location.latitude, location.longitude);
 
-                Marker muserMarker = mMap.addMarker(new MarkerOptions().position(userLocation).title(key).icon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_car)));
+                Marker muserMarker = mMap.addMarker(new MarkerOptions().position(userLocation).title(key).icon(BitmapDescriptorFactory.fromResource(R.mipmap.rsz_icon)));
+
                 muserMarker.setTag(key);
 
                 markers.add(muserMarker);
