@@ -2,7 +2,7 @@ package com.example.nitctraveltogether;
 
 public class User {
 
-    public String email_id, firstName, lastMame, age;
+    public String email_id, firstName, lastName, age;
     private String password,phone;
     public User(){
 
@@ -12,7 +12,7 @@ public class User {
         this.email_id   = email;
         this.password = password;
         this.firstName = name;
-        this.lastMame = lname;
+        this.lastName = lname;
         this.phone = phone;
         this.age = age;
     }

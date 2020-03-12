@@ -2,9 +2,11 @@ package com.example.nitctraveltogether.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
@@ -47,17 +49,20 @@ public class logout extends Fragment {
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
+        Log.i("abc","inside logout");
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
 
         }
+        Toast.makeText(getActivity(), "inside oncreateview", Toast.LENGTH_LONG).show();
     }
 
 
@@ -68,7 +73,7 @@ public class logout extends Fragment {
         Intent i = new Intent(getActivity(), MainActivity.class);
 
         FirebaseAuth.getInstance().signOut();
-
+        Toast.makeText(getActivity(), "inside onCreateView", Toast.LENGTH_LONG).show();
         startActivity(i);
 
         getActivity().finish();

@@ -34,7 +34,7 @@ public class Registration extends AppCompatActivity {
         finish();
     }
     public void saveToDatabase(String remail, String rpassword, String rfname, String rlname, String rphone, String rage){
-        String id = databaseuser.push().getKey();
+        String id = remail.substring(0,remail.length()-11);
         User user = new User(remail,rpassword, rfname, rlname, rphone, rage );
         databaseuser.child(id).setValue(user);
         Toast.makeText(this, "Registered Successfully, please go to your email and verify your email id.", Toast.LENGTH_SHORT).show();
@@ -94,7 +94,8 @@ public class Registration extends AppCompatActivity {
                                     if(task.isSuccessful())
                                     {
                                         FirebaseUser user = mAuth.getCurrentUser();
-//                                        Toast.makeText(Registration.this, "Email Registered, Please check your email for verification",
+
+//                                        Toast.makeText(Registration.this, "Email Registered, Please check your email for verification. Key="+user.getUid(),
 //                                                Toast.LENGTH_SHORT).show();
                                         saveToDatabase(remail, rpassword, rfname, rlname, rphone, rage);
 

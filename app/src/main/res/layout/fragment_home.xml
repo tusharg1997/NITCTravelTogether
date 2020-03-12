@@ -117,6 +117,7 @@
             android:textColor="@color/white"
             android:textColorHint="#070707"
             android:textSize="15sp"
+            android:visibility="invisible"
             app:layout_constraintBottom_toTopOf="@+id/destination"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"

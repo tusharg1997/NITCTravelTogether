@@ -89,7 +89,8 @@ public class home extends AppCompatActivity implements OnMapReadyCallback {
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-
+        String email= FirebaseAuth.getInstance().getCurrentUser().getEmail();
+        Toast.makeText(this,"email="+email,Toast.LENGTH_SHORT);
     }
 
 
@@ -114,11 +115,11 @@ public class home extends AppCompatActivity implements OnMapReadyCallback {
             public void onLocationChanged(Location location) {
 
                 LatLng userLocation = new LatLng(location.getLatitude(), location.getLongitude());
-//                Toast.makeText(getApplicationContext() ," "+location.getLongitude()+" "+location.getLongitude() , Toast.LENGTH_LONG).show();
-                mMap.clear();
-                mMap.addMarker(new MarkerOptions().position(userLocation).title("Your Location").icon(BitmapDescriptorFactory.fromResource(R.mipmap.cur)));
-                mMap.moveCamera(CameraUpdateFactory.newLatLng(userLocation));
-                mMap.animateCamera(CameraUpdateFactory.zoomTo(13));
+////                Toast.makeText(getApplicationContext() ," "+location.getLongitude()+" "+location.getLongitude() , Toast.LENGTH_LONG).show();
+//                mMap.clear();
+//                mMap.addMarker(new MarkerOptions().position(userLocation).title("Your Location").icon(BitmapDescriptorFactory.fromResource(R.mipmap.cur)));
+//                mMap.moveCamera(CameraUpdateFactory.newLatLng(userLocation));
+//                mMap.animateCamera(CameraUpdateFactory.zoomTo(13));
 //
 //                String id= FirebaseAuth.getInstance().getCurrentUser().getUid();
 //                DatabaseReference ref= FirebaseDatabase.getInstance().getReference("userlocation");
@@ -127,6 +128,7 @@ public class home extends AppCompatActivity implements OnMapReadyCallback {
 //                geoFire.setLocation(id, new GeoLocation(location.getLatitude(),location.getLongitude()));
 //                if(!getuseraroundstarted)
 //                    getusersaround();
+                Toast.makeText(home.this,"Location changing",Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -178,10 +180,13 @@ public class home extends AppCompatActivity implements OnMapReadyCallback {
                 mMap.moveCamera(CameraUpdateFactory.newLatLng(userLocation));
                 mMap.animateCamera(CameraUpdateFactory.zoomTo(13));
                 String id= FirebaseAuth.getInstance().getCurrentUser().getUid();
+                String email= FirebaseAuth.getInstance().getCurrentUser().getEmail();
+               // Toast.makeText(this,"email="+email,Toast.LENGTH_LONG).show();
+                String emailid=email.substring(0,email.length()-11);
                 DatabaseReference ref= FirebaseDatabase.getInstance().getReference("userlocation");
 
                 GeoFire geoFire= new GeoFire(ref);
-                geoFire.setLocation(id, new GeoLocation(lastKnownLocation.getLatitude(),lastKnownLocation.getLongitude()));
+                geoFire.setLocation(emailid, new GeoLocation(lastKnownLocation.getLatitude(),lastKnownLocation.getLongitude()));
                 geoLocation=new GeoLocation(lastKnownLocation.getLatitude(),lastKnownLocation.getLongitude());
 
                     getusersaround();

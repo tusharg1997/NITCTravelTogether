@@ -5,6 +5,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -22,7 +23,6 @@ public class  MainActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener firebaseAuthListener;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,10 +34,11 @@ public class  MainActivity extends AppCompatActivity {
         ColorDrawable colorDrawable
                 = new ColorDrawable(Color.parseColor("#ff000000"));
         actionBar.setBackgroundDrawable(colorDrawable);
+
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
         if(user!=null)
-        {Intent i=new Intent(MainActivity.this, home.class);
+        {Intent i=new Intent(MainActivity.this, Drawer.class);
         startActivity(i);
         finish();}
     }
@@ -80,8 +81,11 @@ public class  MainActivity extends AppCompatActivity {
                                 Toast.makeText(MainActivity.this, "Authentication Success.",
                                         Toast.LENGTH_SHORT).show();
                                 FirebaseUser user = mAuth.getCurrentUser();
+                                String email= FirebaseAuth.getInstance().getCurrentUser().getEmail();
+                                String emailid=email.substring(0,email.length()-11);
+                                //progressDialog.dismiss();
 
-                                Intent i=new Intent(MainActivity.this, home.class);
+                                Intent i=new Intent(MainActivity.this, Drawer.class);
                                 startActivity(i);
                                 finish();
                             }
