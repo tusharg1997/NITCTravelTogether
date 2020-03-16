@@ -113,7 +113,7 @@ public class GalleryFragment extends Fragment {
 
                 ArrayAdapter<String> arrayAdapter = new ArrayAdapter(getActivity(), android.R.layout.select_dialog_item, list1);
                 lv.setAdapter(arrayAdapter);
-                pb.dismiss(); 
+                pb.dismiss();
               
             }
             @Override
