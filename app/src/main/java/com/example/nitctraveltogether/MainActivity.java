@@ -85,9 +85,12 @@ public class  MainActivity extends AppCompatActivity {
                                 String emailid=email.substring(0,email.length()-11);
                                 //progressDialog.dismiss();
 
-                                Intent i=new Intent(MainActivity.this, Drawer.class);
-                                startActivity(i);
-                                finish();
+                                    Intent i = new Intent(MainActivity.this, Drawer.class);
+                                    startActivity(i);
+                                    finish();
+
+
+
                             }
                             else{
                                 Toast.makeText(MainActivity.this, "Please verify your email.",
