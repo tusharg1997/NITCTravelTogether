@@ -1,19 +1,28 @@
 package com.example.nitctraveltogether.ui;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.provider.Settings;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.example.nitctraveltogether.Drawer;
+import com.example.nitctraveltogether.Splashscreen;
 import com.example.nitctraveltogether.home;
 
 import androidx.annotation.NonNull;
@@ -49,7 +58,7 @@ import java.util.List;
  * Use the {@link MapFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class MapFragment extends Fragment implements OnMapReadyCallback{
+public class MapFragment extends Fragment implements OnMapReadyCallback, LocationListener{
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -57,8 +66,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
 
 
     private GoogleMap mMap;
-
+    public Criteria criteria;
+    public String bestProvider;
     Location lastLocation;
+    public double latitude;
+    public double longitude;
     LocationManager locationManager;
     LocationListener locationListener;
     LocationRequest locationRequest;
@@ -113,7 +125,26 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
 
         return view;
     }
-
+    public static boolean isLocationEnabled(Context context)
+    {
+        int locationMode = 0;
+        String locationProviders;
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
+        {
+            try
+            {
+                locationMode = Settings.Secure.getInt(context.getContentResolver(), Settings.Secure.LOCATION_MODE);
+            } catch (Settings.SettingNotFoundException e) {
+                e.printStackTrace();
+            }
+            return locationMode != Settings.Secure.LOCATION_MODE_OFF;
+        }
+        else
+        {
+            locationProviders = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
+            return !TextUtils.isEmpty(locationProviders);
+        }
+    }
 
     /**
      * Manipulates the map once available.
@@ -124,13 +155,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
      * it inside the SupportMapFragment. This method will only be triggered once the user has
      * installed Google Play services and returned to the app.
      */
-
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-
         locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-
+        //locationManager = (LocationManager)  this.getSystemService(Context.LOCATION_SERVICE);
+        criteria = new Criteria();
+        bestProvider = String.valueOf(locationManager.getBestProvider(criteria, true)).toString();
         locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
@@ -190,29 +221,48 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
 
             } else {
 
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
 
-                Location lastKnownLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                lastLocation=lastKnownLocation;
-                LatLng userLocation = new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude());
-                mMap.clear();
+               // if (isLocationEnabled(getActivity())) {
+                  //  locationManager.requestLocationUpdates(bestProvider, 1000, 0, this);
+                //    locationManager.requestLocationUpdates(bestProvider, 1000, 0, locationListener);
+                    try {
+                        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
 
-                mMap.addMarker(new MarkerOptions().position(userLocation).title("Your Location").icon(BitmapDescriptorFactory.fromResource(R.mipmap.cur)));
-                mMap.moveCamera(CameraUpdateFactory.newLatLng(userLocation));
-                mMap.animateCamera(CameraUpdateFactory.zoomTo(13));
-                String id= FirebaseAuth.getInstance().getCurrentUser().getUid();
-                String email= FirebaseAuth.getInstance().getCurrentUser().getEmail();
-                // Toast.makeText(this,"email="+email,Toast.LENGTH_LONG).show();
-                String emailid=email.substring(0,email.length()-11);
-                DatabaseReference ref= FirebaseDatabase.getInstance().getReference("userlocation");
+                        Location lastKnownLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                        lastLocation = lastKnownLocation;
+                        if(lastKnownLocation!=null){
+                        LatLng userLocation = new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude());
+                        mMap.clear();
 
-                GeoFire geoFire= new GeoFire(ref);
-                geoFire.setLocation(emailid, new GeoLocation(lastKnownLocation.getLatitude(),lastKnownLocation.getLongitude()));
-                geoLocation=new GeoLocation(lastKnownLocation.getLatitude(),lastKnownLocation.getLongitude());
+                        mMap.addMarker(new MarkerOptions().position(userLocation).title("Your Location").icon(BitmapDescriptorFactory.fromResource(R.mipmap.cur)));
+                        mMap.moveCamera(CameraUpdateFactory.newLatLng(userLocation));
+                        mMap.animateCamera(CameraUpdateFactory.zoomTo(13));
+                        String id = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                        String email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
+                        // Toast.makeText(this,"email="+email,Toast.LENGTH_LONG).show();
+                        String emailid = email.substring(0, email.length() - 11);
+                        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("userlocation");
 
-                getusersaround();
+                        GeoFire geoFire = new GeoFire(ref);
+                        geoFire.setLocation(emailid, new GeoLocation(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude()));
+                        geoLocation = new GeoLocation(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude());
+
+                        getusersaround();
+                        }
+                        else
+                        {
+                            Toast.makeText(getActivity(),"Location requesting",Toast.LENGTH_SHORT).show();
+
+                            locationManager.requestLocationUpdates(bestProvider, 1000, 0, this);
+
+                        }
+                    } catch (Exception e) {
+                        Toast.makeText(getActivity(), e.toString(), Toast.LENGTH_SHORT).show();
+
+                    }
+
+              //  }
             }
-
 
         }
 
@@ -298,6 +348,31 @@ public class MapFragment extends Fragment implements OnMapReadyCallback{
 
             }
         });
+
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        locationManager.removeUpdates(this);
+
+        //open the map:
+        latitude = location.getLatitude();
+        longitude = location.getLongitude();
+        Toast.makeText(getActivity(), "latitude:" + latitude + " longitude:" + longitude, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
 
     }
 //    @Override

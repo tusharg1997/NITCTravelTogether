@@ -62,7 +62,7 @@ public class Splashscreen extends AppCompatActivity {
                         startActivity(i);
                         finish();
                     }
-                },1500);
+                },2500);
             }
             new Handler().postDelayed(new Runnable() {
                 @Override
@@ -71,7 +71,7 @@ public class Splashscreen extends AppCompatActivity {
                     startActivity(i);
                     finish();
                 }
-            },1500);
+            },2500);
 
 
         }

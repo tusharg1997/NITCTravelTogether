@@ -30,6 +30,7 @@ public class Registration extends AppCompatActivity {
     DatabaseReference databaseuser;
     public void sendtologin(View view){
         Intent i = new Intent(this, MainActivity.class);
+        FirebaseAuth.getInstance().signOut();
         startActivity(i);
         finish();
     }
