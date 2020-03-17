@@ -107,7 +107,7 @@ public class GalleryFragment extends Fragment {
                 }
                 for(int i=0;i<list.size();i++)
                 {
-                    list1.add(list.get(i).email);
+                    list1.add(list.get(i).email + "\n" + list.get(i).destination);
                     Log.i("abc",list1.get(i));
                 }
 
