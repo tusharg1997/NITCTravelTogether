@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -22,12 +23,13 @@ import com.google.firebase.auth.FirebaseUser;
 public class  MainActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
+    ProgressDialog pb;
     private FirebaseAuth.AuthStateListener firebaseAuthListener;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        pb = new ProgressDialog(this);
         ActionBar actionBar;
         actionBar = getSupportActionBar();
 
@@ -71,7 +73,11 @@ public class  MainActivity extends AppCompatActivity {
 
                 return;
             }
-
+        pb.setMessage("Login .....");
+        pb.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        pb.setIndeterminate(true);
+        pb.setProgress(0);
+        pb.show();
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -84,20 +90,25 @@ public class  MainActivity extends AppCompatActivity {
                                 String email= FirebaseAuth.getInstance().getCurrentUser().getEmail();
                                 String emailid=email.substring(0,email.length()-11);
                                 //progressDialog.dismiss();
+                                    pb.dismiss();
+                                    Intent i = new Intent(MainActivity.this, Drawer.class);
+                                    startActivity(i);
+                                    finish();
 
-                                Intent i=new Intent(MainActivity.this, Drawer.class);
-                                startActivity(i);
-                                finish();
+
+
                             }
                             else{
+                                pb.dismiss();
                                 Toast.makeText(MainActivity.this, "Please verify your email.",
                                         Toast.LENGTH_SHORT).show();
                             }
 
                         } else {
+                            pb.dismiss();
                             // If sign in fails, display a message to the user.
                             //Log.w(TAG, "signInWithEmail:failure", task.getException());
-                            Toast.makeText(MainActivity.this, "Authentication failed.",
+                            Toast.makeText(MainActivity.this, "Wrong Username or Password.",
                                     Toast.LENGTH_SHORT).show();
 
                         }

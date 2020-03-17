@@ -116,7 +116,7 @@ public class Drawer extends AppCompatActivity {
         //Toast.makeText(this, "email is" + id, Toast.LENGTH_SHORT).show();
         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         Date date = new Date();
-        String time = dateFormat.format(date);
+            String time = dateFormat.format(date);
         Offer offer = new Offer(remail, rdestination, rseats, rvehicle, time);
         String id1 = remail.substring(0,remail.length()-11);
         databaseuser.child(id1).setValue(offer);

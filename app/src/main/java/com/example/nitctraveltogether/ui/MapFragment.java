@@ -180,7 +180,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
 //                geoFire.setLocation(id, new GeoLocation(location.getLatitude(),location.getLongitude()));
 //                if(!getuseraroundstarted)
 //                    getusersaround();
-                Toast.makeText(getActivity(),"Location changing",Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getActivity(),"Location changing",Toast.LENGTH_SHORT).show();
             }
 
             @Override

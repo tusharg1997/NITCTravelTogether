@@ -1,6 +1,7 @@
 package com.example.nitctraveltogether.ui.gallery;
 
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -50,6 +51,7 @@ public class GalleryFragment extends Fragment {
     int count = 0;
     private GalleryViewModel galleryViewModel;
     ListView lv;
+    ProgressDialog pb;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener firebaseAuthListener;
     DatabaseReference databaseuser;
@@ -70,6 +72,7 @@ public class GalleryFragment extends Fragment {
         galleryViewModel =
                 ViewModelProviders.of(this).get(GalleryViewModel.class);
         int x;
+        pb = new ProgressDialog(getActivity());
         View root = inflater.inflate(R.layout.fragment_gallery, container, false);
         lv  = root.findViewById(R.id.listview);
 
@@ -81,7 +84,11 @@ public class GalleryFragment extends Fragment {
         user=pref.getString("email_id",null);
         final List<String> list1 = new ArrayList<>();
         final List<Offer> list = new ArrayList<>();
-
+        pb.setMessage("Loading .....");
+        pb.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        pb.setIndeterminate(true);
+        pb.setProgress(0);
+        pb.show();
         databaseuser.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -100,12 +107,13 @@ public class GalleryFragment extends Fragment {
                 }
                 for(int i=0;i<list.size();i++)
                 {
-                    list1.add(list.get(i).email);
+                    list1.add(list.get(i).email + "\n" + list.get(i).destination);
                     Log.i("abc",list1.get(i));
                 }
 
                 ArrayAdapter<String> arrayAdapter = new ArrayAdapter(getActivity(), android.R.layout.select_dialog_item, list1);
                 lv.setAdapter(arrayAdapter);
+                pb.dismiss();
               
             }
             @Override
