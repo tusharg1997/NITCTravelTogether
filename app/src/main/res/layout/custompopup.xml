@@ -64,6 +64,22 @@
             android:textColor="@color/design_default_color_on_secondary"
             android:textSize="20dp"></TextView>
 
+        <TextView
+            android:id="@+id/gender"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Gender"
+            android:textColor="@color/design_default_color_on_secondary"
+            android:textSize="20dp"></TextView>
+
+        <TextView
+            android:id="@+id/age"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Age"
+            android:textColor="@color/design_default_color_on_secondary"
+            android:textSize="20dp"></TextView>
+
 
     </LinearLayout>
 

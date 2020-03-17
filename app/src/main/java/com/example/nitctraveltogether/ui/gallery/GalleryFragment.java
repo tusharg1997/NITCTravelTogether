@@ -30,6 +30,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -47,6 +49,9 @@ class request{
 }
 public class GalleryFragment extends Fragment {
 
+    TextView name, email, aseats, tov,destination,age,gender;
+     String rage="Age : ";
+     String rgender="Gender : ";
     Dialog mydialog;
     int count = 0;
     private GalleryViewModel galleryViewModel;
@@ -63,7 +68,17 @@ public class GalleryFragment extends Fragment {
 
 
 
-
+    String getName(String name)
+    {
+        String temp="";
+        for(int i=0;i<name.length();i++)
+        {
+            if(name.charAt(i)=='_')
+                break;
+            temp = temp + name.charAt(i);
+        }
+        return temp;
+    }
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         FirebaseDatabase data =  FirebaseDatabase.getInstance();
@@ -77,7 +92,7 @@ public class GalleryFragment extends Fragment {
         lv  = root.findViewById(R.id.listview);
 
         pref=getActivity().getSharedPreferences("user",MODE_PRIVATE);
-        String senderemail=FirebaseAuth.getInstance().getCurrentUser().getEmail();
+        final String senderemail=FirebaseAuth.getInstance().getCurrentUser().getEmail();
         String key = senderemail.substring(0,senderemail.length()-11);
         databaseuser1 = FirebaseDatabase.getInstance().getReference("request");
         editor=pref.edit();
@@ -99,6 +114,7 @@ public class GalleryFragment extends Fragment {
                         HashMap<String,Object> userData = (HashMap<String,Object>) data;
                         Offer offer = new Offer( (String)userData.get("email"), (String) userData.get("destination"),
                                 (String) userData.get("availableSeats"), (String) userData.get("vehicleType"),(String) userData.get("time"));
+                        if(!offer.email.equalsIgnoreCase(senderemail))
                         list.add(offer);
                     }
                     catch (Exception e){
@@ -108,7 +124,7 @@ public class GalleryFragment extends Fragment {
                 for(int i=0;i<list.size();i++)
                 {
                     list1.add(list.get(i).email + "\n" + list.get(i).destination);
-                    Log.i("abc",list1.get(i));
+
                 }
 
                 ArrayAdapter<String> arrayAdapter = new ArrayAdapter(getActivity(), android.R.layout.select_dialog_item, list1);
@@ -126,12 +142,38 @@ public class GalleryFragment extends Fragment {
             public void onItemClick(AdapterView<?> adapterView, View view, final int i, long l) {
                 TextView txtclose;
                 Button btnFollow;
-                TextView name, email, aseats, tov,destination;
-
+                TextView name, email, aseats, tov,destination,age,gender;
                 mydialog.setContentView(R.layout.custompopup);
                 txtclose =(TextView) mydialog.findViewById(R.id.txtclose);
                 name =(TextView) mydialog.findViewById(R.id.name);
                 email =(TextView) mydialog.findViewById(R.id.email);
+                age = (TextView) mydialog.findViewById(R.id.age);
+                gender = (TextView) mydialog.findViewById(R.id.gender);
+                // accessing age and gender from user table
+
+                DatabaseReference userdata = FirebaseDatabase.getInstance().getReference("User").
+                        child(list.get(i).email.substring(0,list.get(i).email.length()-11));
+                userdata.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        for (DataSnapshot data:dataSnapshot.getChildren())
+                        {
+                            if(data.getKey().toString().equalsIgnoreCase("age"))
+                                rage = ("Age : " + data.getValue().toString());
+                            if(data.getKey().toString().equalsIgnoreCase("gender"))
+                            rgender = ("Gender: "+ data.getValue().toString());
+                        }
+
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+            age.setText(rage);
+            gender.setText(rgender);
                 aseats =(TextView) mydialog.findViewById(R.id.availableseats);
                 destination =(TextView) mydialog.findViewById(R.id.destination);
                 tov =(TextView) mydialog.findViewById(R.id.typeofvehicle);
@@ -140,7 +182,8 @@ public class GalleryFragment extends Fragment {
                 String receiveremail=list.get(i).email.substring(0,list.get(i).email.length()-11);
                 databaseuser1 = FirebaseDatabase.getInstance().getReference("request").child(receiveremail);
                 tov.setText("Type of Vehicle "+ list.get(i).vehicleType);
-                name.setText("Name : kapil Chhipa");
+
+                name.setText("Name : "+ getName(list.get(i).email));
                 destination.setText("Destination "+ list.get(i).destination);
                 txtclose.setText("X");
                 btnFollow = (Button) mydialog.findViewById(R.id.btnsendrequest);
