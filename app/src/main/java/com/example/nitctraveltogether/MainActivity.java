@@ -99,14 +99,16 @@ public class  MainActivity extends AppCompatActivity {
 
                             }
                             else{
+                                pb.dismiss();
                                 Toast.makeText(MainActivity.this, "Please verify your email.",
                                         Toast.LENGTH_SHORT).show();
                             }
 
                         } else {
+                            pb.dismiss();
                             // If sign in fails, display a message to the user.
                             //Log.w(TAG, "signInWithEmail:failure", task.getException());
-                            Toast.makeText(MainActivity.this, "Authentication failed.",
+                            Toast.makeText(MainActivity.this, "Wrong Username or Password.",
                                     Toast.LENGTH_SHORT).show();
 
                         }
