@@ -12,6 +12,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Build.VERSION;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -97,17 +98,13 @@ public class Drawer extends AppCompatActivity {
                 R.id.nav_home, R.id.needlift, R.id.sharefare, R.id.logout, R.id.map)
                 .setDrawerLayout(drawer)
                 .build();
-        View hView =  navigationView.getHeaderView(0);
-        TextView email = (TextView)hView.findViewById(R.id.email);
+        View hView = navigationView.getHeaderView(0);
+        TextView email = (TextView) hView.findViewById(R.id.email);
         email.setText(FirebaseAuth.getInstance().getCurrentUser().getEmail());
 
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
-
-    }
-
-        //Notification Code
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             CharSequence name = "Tushar";
             String description = "Testing";
@@ -121,24 +118,23 @@ public class Drawer extends AppCompatActivity {
         }
 
 
+        //Notification Code
 
-        FirebaseInstanceId .getInstance().getInstanceId().addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+
+        FirebaseInstanceId.getInstance().getInstanceId().addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
             @Override
             public void onComplete(@NonNull Task<InstanceIdResult> task) {
-                if(task.isSuccessful())
-                {
-                    String token=task.getResult().getToken();
+                if (task.isSuccessful()) {
+                    String token = task.getResult().getToken();
                     //Toast.makeText(Drawer.this,"Token is:"+token,Toast.LENGTH_SHORT).show();
                     savetoken(token);
-                }
-                else
-                {
-                    Toast.makeText(Drawer.this,"error generating the token "+task.getException().getMessage(),Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(Drawer.this, "error generating the token " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
         });
-
     }
+
     //Saving unique token to database
     public void savetoken(String s)
     {
