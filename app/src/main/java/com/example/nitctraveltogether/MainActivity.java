@@ -3,6 +3,7 @@ package com.example.nitctraveltogether;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -10,7 +11,9 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AutoCompleteTextView;
 import android.widget.Toast;
 
@@ -19,12 +22,28 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-
-public class  MainActivity extends AppCompatActivity {
+import android.view.View.OnClickListener;
+import android.view.View.OnKeyListener;
+public class  MainActivity extends AppCompatActivity implements  View.OnKeyListener, View.OnClickListener{
 
     private FirebaseAuth mAuth;
     ProgressDialog pb;
+    AutoCompleteTextView emailv,passwordv;
     private FirebaseAuth.AuthStateListener firebaseAuthListener;
+    public boolean onKey(View view, int i, KeyEvent keyEvent){
+        if(i == keyEvent.KEYCODE_ENTER && keyEvent.getAction() == KeyEvent.ACTION_DOWN){
+            login(view);
+        }
+        return false;
+    }
+    @Override
+    public void onClick(View v) {
+        if(v.getId() == R.id.main_activity ){
+            InputMethodManager inputMethodManager =(InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+
+        }
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,6 +62,11 @@ public class  MainActivity extends AppCompatActivity {
         {Intent i=new Intent(MainActivity.this, Drawer.class);
         startActivity(i);
         finish();}
+        emailv= findViewById(R.id.email);
+        passwordv=findViewById(R.id.password);
+        passwordv.setOnKeyListener(this);
+        ConstraintLayout layout = findViewById(R.id.main_activity);
+        layout.setOnClickListener(this);
     }
     //Register Code
     public void register(View view)
@@ -62,9 +86,7 @@ public class  MainActivity extends AppCompatActivity {
     //Login Code
     public void login(View view)
     {
-        AutoCompleteTextView emailv,passwordv;
-        emailv= findViewById(R.id.email);
-        passwordv=findViewById(R.id.password);
+
 
         String email=emailv.getText().toString();
         String password=passwordv.getText().toString();
@@ -116,4 +138,7 @@ public class  MainActivity extends AppCompatActivity {
                     }
                 });
     }
+
+
+
 }

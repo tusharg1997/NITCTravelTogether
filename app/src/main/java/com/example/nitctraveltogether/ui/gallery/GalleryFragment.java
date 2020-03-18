@@ -65,7 +65,7 @@ class request{
 public class GalleryFragment extends Fragment {
 
     TextView name, email, aseats, tov,destination,age,gender;
-     String rage="Age : ";
+     String rage=\;
      String rgender="Gender : ";
     Dialog mydialog;
     int count = 0;
