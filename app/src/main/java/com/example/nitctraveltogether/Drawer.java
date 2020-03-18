@@ -105,10 +105,10 @@ public class Drawer extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
-    }
+    
 
         //Notification Code
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             CharSequence name = "Tushar";
             String description = "Testing";
             int importance = NotificationManager.IMPORTANCE_DEFAULT;
