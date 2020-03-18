@@ -2,11 +2,16 @@ package com.example.nitctraveltogether;
 
 import android.app.SearchManager;
 import android.content.Context;
+
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -38,6 +43,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -65,6 +72,7 @@ public class Drawer extends AppCompatActivity {
 
 
     DatabaseReference databaseuser;
+    DatabaseReference databaseuser1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,7 +107,46 @@ public class Drawer extends AppCompatActivity {
 
     }
 
+        //Notification Code
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = "Tushar";
+            String description = "Testing";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel("tushar_m180499ca", name, importance);
+            channel.setDescription(description);
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
 
+
+
+        FirebaseInstanceId .getInstance().getInstanceId().addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+            @Override
+            public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                if(task.isSuccessful())
+                {
+                    String token=task.getResult().getToken();
+                    //Toast.makeText(Drawer.this,"Token is:"+token,Toast.LENGTH_SHORT).show();
+                    savetoken(token);
+                }
+                else
+                {
+                    Toast.makeText(Drawer.this,"error generating the token "+task.getException().getMessage(),Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+    }
+    //Saving unique token to database
+    public void savetoken(String s)
+    {
+        String temail=FirebaseAuth.getInstance().getCurrentUser().getEmail();
+        String email=temail.substring(0,temail.length()-11);
+        databaseuser1= FirebaseDatabase.getInstance().getReference("tokens");
+        databaseuser1.child(email).setValue(s);
+    }
 
     public void offerLift(View view) {
         EditText email = findViewById(R.id.email);

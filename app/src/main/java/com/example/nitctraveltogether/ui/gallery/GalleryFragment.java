@@ -1,10 +1,13 @@
 package com.example.nitctraveltogether.ui.gallery;
 
 import android.app.Dialog;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.ProgressDialog;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,9 +21,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.example.nitctraveltogether.Api;
 import com.example.nitctraveltogether.Offer;
 import com.example.nitctraveltogether.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -32,9 +39,17 @@ import com.google.firebase.database.ValueEventListener;
 
 import org.w3c.dom.Text;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 import static android.content.Context.MODE_PRIVATE;
 class request{
@@ -61,10 +76,12 @@ public class GalleryFragment extends Fragment {
     private FirebaseAuth.AuthStateListener firebaseAuthListener;
     DatabaseReference databaseuser;
     DatabaseReference databaseuser1;
+    DatabaseReference databaseuser2;
     SharedPreferences pref;
     SharedPreferences.Editor editor;
     String user;
-
+    String token=null;
+    String tokenid;
 
 
 
@@ -141,7 +158,7 @@ public class GalleryFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, final int i, long l) {
                 TextView txtclose;
-                Button btnFollow;
+                final Button btnFollow;
                 TextView name, email, aseats, tov,destination,age,gender;
                 mydialog.setContentView(R.layout.custompopup);
                 txtclose =(TextView) mydialog.findViewById(R.id.txtclose);
@@ -179,7 +196,7 @@ public class GalleryFragment extends Fragment {
                 tov =(TextView) mydialog.findViewById(R.id.typeofvehicle);
                 email.setText("Email: "+ list.get(i).email);
                 aseats.setText("No. of Seats "+ list.get(i).availableSeats);
-                String receiveremail=list.get(i).email.substring(0,list.get(i).email.length()-11);
+                final String receiveremail=list.get(i).email.substring(0,list.get(i).email.length()-11);
                 databaseuser1 = FirebaseDatabase.getInstance().getReference("request").child(receiveremail);
                 tov.setText("Type of Vehicle "+ list.get(i).vehicleType);
 
@@ -199,6 +216,7 @@ public class GalleryFragment extends Fragment {
                 mydialog.show();
                 final ArrayList<String> ls = new ArrayList<String>();
                 btnFollow.setOnClickListener(new View.OnClickListener() {
+                    @RequiresApi(api = Build.VERSION_CODES.O)
                     @Override
                     public void onClick(View v) {
 
@@ -214,11 +232,6 @@ public class GalleryFragment extends Fragment {
                                     if(key>count)
                                         count=key;
                                 }
-
-
-
-
-
                             }
                             @Override
                             public void onCancelled(@NonNull DatabaseError databaseError) {
@@ -227,10 +240,61 @@ public class GalleryFragment extends Fragment {
                         });
                         databaseuser1.child(String.valueOf(count+1)).setValue(senderemail);
                         Toast.makeText(getActivity(),"Request sent",Toast.LENGTH_SHORT).show();
+                        databaseuser2 = FirebaseDatabase.getInstance().getReference("tokens");
+
+                        databaseuser2.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                for (DataSnapshot data:dataSnapshot.getChildren())
+                                {
+                                    String key=data.getKey().toString();
+                                    String value=data.getValue().toString();
+                                    if(key.equalsIgnoreCase(receiveremail))
+                                    { token = value;}
+                                }
+                                sendnotification(senderemail);
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
+
+//                        while(token==null){}
+//                        sendnotification();
                     }
                 });
             }
         });
         return root;
+    }
+
+    //Notification Code
+    private void sendnotification(String sender)
+    {
+        String title="Request for lift from:"+sender;
+        String body="I want to travel with you";
+        Toast.makeText(getActivity(), "Inside send notification, token:"+token, Toast.LENGTH_SHORT).show();
+        //Hosting Url-https://nitctraveltogether-a535a.firebaseapp.com
+        Retrofit retrofit = new Retrofit.Builder().baseUrl("https://nitctraveltogether-a535a.firebaseapp.com/api/").addConverterFactory(GsonConverterFactory.create()).build();
+
+        Api api=retrofit.create(Api.class);
+        Call<ResponseBody> call=api.sendNotification(token,title,body);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                try {
+                    Toast.makeText(getActivity(),response.body().string(),Toast.LENGTH_SHORT).show();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+            }
+        });
     }
 }
