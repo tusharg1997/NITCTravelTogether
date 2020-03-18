@@ -1,5 +1,7 @@
 package com.example.nitctraveltogether;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -88,9 +90,8 @@ public class Drawer extends AppCompatActivity {
                 .setDrawerLayout(drawer)
                 .build();
         View hView =  navigationView.getHeaderView(0);
-        TextView nav_user = (TextView)hView.findViewById(R.id.email);
-        String email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
-        nav_user.setText(email);
+        TextView email = (TextView)hView.findViewById(R.id.email);
+        email.setText(FirebaseAuth.getInstance().getCurrentUser().getEmail());
 
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
@@ -148,6 +149,11 @@ public class Drawer extends AppCompatActivity {
         FirebaseDatabase data = FirebaseDatabase.getInstance();
         databaseuser = FirebaseDatabase.getInstance().getReference("OfferLift");
         mAuth = FirebaseAuth.getInstance();
+
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+       /* SearchView searchView = (SearchView) menu.findItem(R.id.).getActionView();
+        // Assumes current activity is the searchable activity
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));*/
         return true;
     }
 
