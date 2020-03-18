@@ -1,7 +1,11 @@
 package com.example.nitctraveltogether;
 
+import android.app.SearchManager;
+import android.content.Context;
+
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -10,9 +14,12 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.SearchView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -20,6 +27,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.MenuItemCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -89,10 +97,15 @@ public class Drawer extends AppCompatActivity {
                 R.id.nav_home, R.id.needlift, R.id.sharefare, R.id.logout, R.id.map)
                 .setDrawerLayout(drawer)
                 .build();
+        View hView =  navigationView.getHeaderView(0);
+        TextView email = (TextView)hView.findViewById(R.id.email);
+        email.setText(FirebaseAuth.getInstance().getCurrentUser().getEmail());
 
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
+
+    }
 
         //Notification Code
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -106,6 +119,7 @@ public class Drawer extends AppCompatActivity {
             NotificationManager notificationManager = getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
         }
+
 
 
         FirebaseInstanceId .getInstance().getInstanceId().addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
@@ -182,6 +196,11 @@ public class Drawer extends AppCompatActivity {
         FirebaseDatabase data = FirebaseDatabase.getInstance();
         databaseuser = FirebaseDatabase.getInstance().getReference("OfferLift");
         mAuth = FirebaseAuth.getInstance();
+
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+       /* SearchView searchView = (SearchView) menu.findItem(R.id.).getActionView();
+        // Assumes current activity is the searchable activity
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));*/
         return true;
     }
 
