@@ -62,6 +62,7 @@ public class SlideshowFragment extends Fragment {
     ProgressDialog pb;
     String rage="Age :";
     String rgender="Gender : ";
+    String contact="";
     String token=null;
     Dialog mydialog;
     DatabaseReference databaseuser;
@@ -71,13 +72,15 @@ public class SlideshowFragment extends Fragment {
     private FirebaseAuth.AuthStateListener firebaseAuthListener;
     private SlideshowViewModel slideshowViewModel;
     ListView list;
-
+    String AcceptorEmail = "";
+    String AcceptorContact="";
     //Sending Notification
 
-    private void sendacceptnotification()
+    private void sendacceptnotification(String contactNo)
     {
+        String email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
         String title="Request accepted";
-        String body="Your request has been accepted";
+        String body="Your request has been accepted From: " + email+ "\n The Acceptor Contact Number is " + contactNo;
         Toast.makeText(getActivity(), "Inside send notification, token:"+token, Toast.LENGTH_SHORT).show();
         //Hosting Url-https://nitctraveltogether-a535a.firebaseapp.com
         Retrofit retrofit = new Retrofit.Builder().baseUrl("https://nitctraveltogether-a535a.firebaseapp.com/api/").addConverterFactory(GsonConverterFactory.create()).build();
@@ -104,7 +107,8 @@ public class SlideshowFragment extends Fragment {
     private void sendrejectnotification()
     {
         String title="Request rejected";
-        String body="Your request has been rejected";
+        String email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
+        String body="Your request has been rejected from " + email;
         Toast.makeText(getActivity(), "Inside send notification, token:"+token, Toast.LENGTH_SHORT).show();
         //Hosting Url-https://nitctraveltogether-a535a.firebaseapp.com
         Retrofit retrofit = new Retrofit.Builder().baseUrl("https://nitctraveltogether-a535a.firebaseapp.com/api/").addConverterFactory(GsonConverterFactory.create()).build();
@@ -131,13 +135,14 @@ public class SlideshowFragment extends Fragment {
     public void doRemainingWork(List<String> ls, int i){
         TextView txtclose;
         final Button btnFollow,accept,reject;
-        TextView name, email, aseats, tov,destination,age,gender;
+        TextView name, email, aseats, tov,destination,age,gender,contactt;
         mydialog.setContentView(R.layout.popuprequest);
         txtclose =(TextView) mydialog.findViewById(R.id.txtclose);
         name =(TextView) mydialog.findViewById(R.id.name);
         email =(TextView) mydialog.findViewById(R.id.email);
         age = (TextView) mydialog.findViewById(R.id.age);
         gender = (TextView) mydialog.findViewById(R.id.gender);
+        contactt = (TextView) mydialog.findViewById(R.id.number);
         age.setText(rage);
         gender.setText(rgender);
         email.setText("Email: "+ ls.get(i));
@@ -155,12 +160,33 @@ public class SlideshowFragment extends Fragment {
         reject=mydialog.findViewById(R.id.reject);
 
         //When user accepts the request
+        AcceptorEmail = FirebaseAuth.getInstance().getCurrentUser().getEmail();
+        String key = AcceptorEmail.substring(0, AcceptorEmail.length()-11);
+        AcceptorContact="";
+        DatabaseReference user = FirebaseDatabase.getInstance().getReference("User").child(key);
+        user.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot data: dataSnapshot.getChildren()){
+
+                    if(data.getKey().toString().equalsIgnoreCase("phone"))
+                    {
+                        AcceptorContact = data.getValue().toString();
+                        break;
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
         accept.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 databaseuser2 = FirebaseDatabase.getInstance().getReference("tokens");
-
                 databaseuser2.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -171,7 +197,8 @@ public class SlideshowFragment extends Fragment {
                             if(key.equalsIgnoreCase(tokenemail))
                             { token = value;}
                         }
-                        sendacceptnotification();
+                        contactt.setText("Contact " + contact);
+                        sendacceptnotification(AcceptorContact);
                     }
 
                     @Override
@@ -223,7 +250,11 @@ public class SlideshowFragment extends Fragment {
         databaseuser = FirebaseDatabase.getInstance().getReference("request").child(currentemail);
         mydialog = new Dialog(getActivity());
         pb = new ProgressDialog(getActivity());
-
+        pb.setMessage("Loading .....");
+        pb.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        pb.setIndeterminate(true);
+        pb.setProgress(0);
+        pb.show();
         //
         final List<String> ls = new ArrayList<>();
         final String finalCurrentemail = currentemail;
@@ -237,8 +268,10 @@ public class SlideshowFragment extends Fragment {
                     count++;
                     ls.add(user);
                 }
+
                 ArrayAdapter<String> arrayAdapter = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, ls);
                 list.setAdapter(arrayAdapter);
+                pb.dismiss();
 
             }
             @Override
@@ -268,6 +301,8 @@ public class SlideshowFragment extends Fragment {
                                 rage = ("Age : " + data.getValue().toString());
                             if(data.getKey().toString().equalsIgnoreCase("gender"))
                                 rgender = ("Gender: "+ data.getValue().toString());
+                            if(data.getKey().toString().equalsIgnoreCase("phone"))
+                                contact = data.getValue().toString();
                         }
                         // now call a function
                         doRemainingWork(ls,i);
