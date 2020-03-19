@@ -1,12 +1,18 @@
 package com.example.nitctraveltogether.ui.slideshow;
 
+import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,11 +39,53 @@ import java.util.List;
 public class SlideshowFragment extends Fragment {
 
 
+    String getName(String name)
+    {
+        String temp="";
+        for(int i=0;i<name.length();i++)
+        {
+            if(name.charAt(i)=='_')
+                break;
+            temp = temp + name.charAt(i);
+        }
+        return temp;
+    }
+    ProgressDialog pb;
+    String rage="Age :";
+    String rgender="Gender : ";
+    Dialog mydialog;
     DatabaseReference databaseuser;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener firebaseAuthListener;
     private SlideshowViewModel slideshowViewModel;
     ListView list;
+    public void doRemainingWork(List<String> ls, int i){
+        TextView txtclose;
+        final Button btnFollow;
+        TextView name, email, aseats, tov,destination,age,gender;
+        mydialog.setContentView(R.layout.popuprequest);
+        txtclose =(TextView) mydialog.findViewById(R.id.txtclose);
+        name =(TextView) mydialog.findViewById(R.id.name);
+        email =(TextView) mydialog.findViewById(R.id.email);
+        age = (TextView) mydialog.findViewById(R.id.age);
+        gender = (TextView) mydialog.findViewById(R.id.gender);
+        age.setText(rage);
+        gender.setText(rgender);
+        email.setText("Email: "+ ls.get(i));
+        txtclose.setText("X");
+        name.setText("Name : "+ getName(ls.get(i)));
+        txtclose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mydialog.dismiss();
+            }
+        });
+
+        int x;
+        mydialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        pb.dismiss();
+        mydialog.show();
+    }
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         slideshowViewModel =
@@ -47,7 +95,8 @@ public class SlideshowFragment extends Fragment {
         String currentemail = FirebaseAuth.getInstance().getCurrentUser().getEmail();
         currentemail = currentemail.substring(0,currentemail.length()-11);
         databaseuser = FirebaseDatabase.getInstance().getReference("request").child(currentemail);
-
+        mydialog = new Dialog(getActivity());
+        pb = new ProgressDialog(getActivity());
 
         //
         final List<String> ls = new ArrayList<>();
@@ -59,7 +108,6 @@ public class SlideshowFragment extends Fragment {
                 for(DataSnapshot ds : dataSnapshot.getChildren()) {
 
                     String user = ds.getValue(String.class);
-                    Log.i("user_email",user);
                     count++;
                     ls.add(user);
                 }
@@ -73,6 +121,41 @@ public class SlideshowFragment extends Fragment {
             }
         });
 
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, final int i, long l) {
+                pb.setMessage("Loading .....");
+                pb.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                pb.setIndeterminate(true);
+                pb.setProgress(0);
+                pb.show();
+
+                DatabaseReference userdata = FirebaseDatabase.getInstance().getReference("User").
+                        child(ls.get(i).substring(0,ls.get(i).length()-11));
+                userdata.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        for (DataSnapshot data:dataSnapshot.getChildren())
+                        {
+                            if(data.getKey().toString().equalsIgnoreCase("age"))
+                                rage = ("Age : " + data.getValue().toString());
+                            if(data.getKey().toString().equalsIgnoreCase("gender"))
+                                rgender = ("Gender: "+ data.getValue().toString());
+                        }
+                        // now call a function
+                        doRemainingWork(ls,i);
+
+                    }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+
+                }
+                // on item click close
+                });
         return root;
     }
 }
