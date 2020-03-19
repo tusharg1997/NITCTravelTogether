@@ -23,6 +23,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.example.nitctraveltogether.Api;
 import com.example.nitctraveltogether.Offer;
 import com.example.nitctraveltogether.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -32,9 +33,17 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class SlideshowFragment extends Fragment {
 
@@ -53,15 +62,75 @@ public class SlideshowFragment extends Fragment {
     ProgressDialog pb;
     String rage="Age :";
     String rgender="Gender : ";
+    String token=null;
     Dialog mydialog;
     DatabaseReference databaseuser;
+    DatabaseReference databaseuser2;
+    DatabaseReference databaseuser1;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener firebaseAuthListener;
     private SlideshowViewModel slideshowViewModel;
     ListView list;
+
+    //Sending Notification
+
+    private void sendacceptnotification()
+    {
+        String title="Request accepted";
+        String body="Your request has been accepted";
+        Toast.makeText(getActivity(), "Inside send notification, token:"+token, Toast.LENGTH_SHORT).show();
+        //Hosting Url-https://nitctraveltogether-a535a.firebaseapp.com
+        Retrofit retrofit = new Retrofit.Builder().baseUrl("https://nitctraveltogether-a535a.firebaseapp.com/api/").addConverterFactory(GsonConverterFactory.create()).build();
+
+        Api api=retrofit.create(Api.class);
+        Call<ResponseBody> call=api.sendNotification(token,title,body);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                try {
+                    Toast.makeText(getActivity(),response.body().string(),Toast.LENGTH_SHORT).show();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+            }
+        });
+    }
+
+    private void sendrejectnotification()
+    {
+        String title="Request rejected";
+        String body="Your request has been rejected";
+        Toast.makeText(getActivity(), "Inside send notification, token:"+token, Toast.LENGTH_SHORT).show();
+        //Hosting Url-https://nitctraveltogether-a535a.firebaseapp.com
+        Retrofit retrofit = new Retrofit.Builder().baseUrl("https://nitctraveltogether-a535a.firebaseapp.com/api/").addConverterFactory(GsonConverterFactory.create()).build();
+
+        Api api=retrofit.create(Api.class);
+        Call<ResponseBody> call=api.sendNotification(token,title,body);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                try {
+                    Toast.makeText(getActivity(),response.body().string(),Toast.LENGTH_SHORT).show();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+            }
+        });
+    }
+
     public void doRemainingWork(List<String> ls, int i){
         TextView txtclose;
-        final Button btnFollow;
+        final Button btnFollow,accept,reject;
         TextView name, email, aseats, tov,destination,age,gender;
         mydialog.setContentView(R.layout.popuprequest);
         txtclose =(TextView) mydialog.findViewById(R.id.txtclose);
@@ -80,8 +149,65 @@ public class SlideshowFragment extends Fragment {
                 mydialog.dismiss();
             }
         });
+        String temail=ls.get(i);
+        String tokenemail=temail.substring(0,temail.length()-11);
+        accept=mydialog.findViewById(R.id.accept);
+        reject=mydialog.findViewById(R.id.reject);
 
-        int x;
+        //When user accepts the request
+        accept.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                databaseuser2 = FirebaseDatabase.getInstance().getReference("tokens");
+
+                databaseuser2.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        for (DataSnapshot data:dataSnapshot.getChildren())
+                        {
+                            String key=data.getKey().toString();
+                            String value=data.getValue().toString();
+                            if(key.equalsIgnoreCase(tokenemail))
+                            { token = value;}
+                        }
+                        sendacceptnotification();
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+            }
+        });
+
+        reject.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                databaseuser1 = FirebaseDatabase.getInstance().getReference("tokens");
+
+                databaseuser1.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        for (DataSnapshot data:dataSnapshot.getChildren())
+                        {
+                            String key=data.getKey().toString();
+                            String value=data.getValue().toString();
+                            if(key.equalsIgnoreCase(tokenemail))
+                            { token = value;}
+                        }
+                        sendrejectnotification();
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+            }
+        });
         mydialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         pb.dismiss();
         mydialog.show();

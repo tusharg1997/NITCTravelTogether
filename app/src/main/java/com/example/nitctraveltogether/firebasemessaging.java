@@ -14,7 +14,7 @@ public class firebasemessaging extends FirebaseMessagingService {
             String title=remoteMessage.getNotification().getTitle();
             String text=remoteMessage.getNotification().getBody();
 
-            //notificationhelper.displaynotification(getApplicationContext(),title,text);
+            notificationhelper.displaynotification(getApplicationContext(),title,text);
         }
     }
 }

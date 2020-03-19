@@ -253,7 +253,7 @@ public class GalleryFragment extends Fragment {
                                     if(key.equalsIgnoreCase(receiveremail))
                                     { token = value;}
                                 }
-                                sendnotification();
+                                sendnotification(senderemail);
                             }
 
                             @Override
@@ -272,9 +272,9 @@ public class GalleryFragment extends Fragment {
     }
 
     //Notification Code
-    private void sendnotification()
+    private void sendnotification(String sender)
     {
-        String title="Request for lift";
+        String title="Request for lift from "+sender;
         String body="I want to travel with you";
         Toast.makeText(getActivity(), "Inside send notification, token:"+token, Toast.LENGTH_SHORT).show();
         //Hosting Url-https://nitctraveltogether-a535a.firebaseapp.com
