@@ -65,8 +65,9 @@ class request{
 public class GalleryFragment extends Fragment {
 
     TextView name, email, aseats, tov,destination,age,gender;
-     String rage="Age :";
-     String rgender="Gender : ";
+
+    String rage="Age :";
+    String rgender="Gender : ";
     Dialog mydialog;
     int count = 0;
     private GalleryViewModel galleryViewModel;
@@ -252,7 +253,7 @@ public class GalleryFragment extends Fragment {
                                     if(key.equalsIgnoreCase(receiveremail))
                                     { token = value;}
                                 }
-                                sendnotification(senderemail);
+                                sendnotification();
                             }
 
                             @Override
@@ -271,9 +272,9 @@ public class GalleryFragment extends Fragment {
     }
 
     //Notification Code
-    private void sendnotification(String sender)
+    private void sendnotification()
     {
-        String title="Request for lift from:"+sender;
+        String title="Request for lift";
         String body="I want to travel with you";
         Toast.makeText(getActivity(), "Inside send notification, token:"+token, Toast.LENGTH_SHORT).show();
         //Hosting Url-https://nitctraveltogether-a535a.firebaseapp.com
