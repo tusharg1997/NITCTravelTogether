@@ -161,12 +161,12 @@ public class Drawer extends AppCompatActivity {
         final String rvehicle = vehicle.getText().toString();
 
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        if (currentUser == null) {
-            Intent i = new Intent(this, MainActivity.class);
-            startActivity(i);
-            finish();
-
-        }
+//        if (currentUser == null) {
+//            Intent i = new Intent(this, MainActivity.class);
+//            startActivity(i);
+//            finish();
+//
+//        }
         String remail = currentUser.getEmail();
         if (validate(remail, rdestination, rseats, rvehicle) == false)
             return;

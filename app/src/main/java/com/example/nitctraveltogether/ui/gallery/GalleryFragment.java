@@ -1,9 +1,11 @@
 package com.example.nitctraveltogether.ui.gallery;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -97,6 +99,7 @@ public class GalleryFragment extends Fragment {
         }
         return temp;
     }
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         FirebaseDatabase data =  FirebaseDatabase.getInstance();
