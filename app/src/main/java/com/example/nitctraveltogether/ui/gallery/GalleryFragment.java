@@ -42,9 +42,12 @@ import com.google.firebase.database.ValueEventListener;
 import org.w3c.dom.Text;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -132,7 +135,16 @@ public class GalleryFragment extends Fragment {
                 for(String key: dataMap.keySet()){
                     Object data = dataMap.get(key);
                     try{
+
                         HashMap<String,Object> userData = (HashMap<String,Object>) data;
+                        String offertime = userData.get("time").toString();
+                        SimpleDateFormat format = new SimpleDateFormat("yy/MM/dd HH:mm:ss");
+                        Date d1= format.parse(offertime);
+                        Date now = new Date();
+                        long duration  = now.getTime() - d1.getTime();
+                        long diffInHours = TimeUnit.MILLISECONDS.toHours(duration);
+                        if(diffInHours> 1)
+                            continue;
                         Offer offer = new Offer( (String)userData.get("email"), (String) userData.get("destination"),
                                 (String) userData.get("availableSeats"), (String) userData.get("vehicleType"),(String) userData.get("time"));
                         if(!offer.email.equalsIgnoreCase(senderemail))
@@ -144,7 +156,8 @@ public class GalleryFragment extends Fragment {
                 }
                 for(int i=0;i<list.size();i++)
                 {
-                    list1.add(list.get(i).email + "\n" + list.get(i).destination);
+                    String [] arr= list.get(i).time.split(" ",2);
+                    list1.add(list.get(i).email + "\n" + list.get(i).destination +"                "+   arr[1]);
 
                 }
 
