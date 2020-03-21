@@ -40,11 +40,6 @@
         android:label="@string/logout"
         tools:layout="@layout/fragment_logout" />
     <fragment
-        android:id="@+id/sharefare"
-        android:name="com.example.nitctraveltogether.ui.slideshow.SlideshowFragment"
-        android:label="@string/sharefare"
-        tools:layout="@layout/fragment_slideshow" />
-    <fragment
         android:id="@+id/map"
         android:name="com.example.nitctraveltogether.ui.MapFragment"
         android:label="@string/map"
@@ -54,5 +49,17 @@
         android:name="com.example.nitctraveltogether.ui.ReportAndRating"
         android:label="Report And Rating"
         tools:layout="@layout/fragment_report_and_rating">
+    </fragment>
+    <fragment
+        android:id="@+id/sharefareofferlift"
+        android:name="com.example.nitctraveltogether.ui.ShareFareOfferLift"
+        android:label="ShareFare OfferLift"
+        tools:layout="@layout/fragment_share_fare_offer_lift">
+    </fragment>
+    <fragment
+        android:id="@+id/sharefareneedlift"
+        android:name="com.example.nitctraveltogether.ui.slideshow.SlideshowFragment"
+        android:label="ShareFare NeedLift"
+        tools:layout="@layout/fragment_slideshow">
     </fragment>
 </navigation>

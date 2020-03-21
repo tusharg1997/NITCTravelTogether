@@ -3,7 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
-    <group android:checkableBehavior="single">
+    <item android:title="General">
+        <menu>
+            <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_home"
             android:icon="@drawable/offerlift"
@@ -12,23 +14,52 @@
             android:id="@+id/needlift"
             android:icon="@drawable/needlift"
             android:title="@string/needlift" />
-        <item
-            android:id="@+id/sharefare"
-            android:icon="@drawable/sharefare"
-            android:title="@string/sharefare" />
+
         <item
             android:id="@+id/map"
             android:icon="@mipmap/rsz_icon"
             android:title="@string/map" />
-        <item
-            android:id="@+id/reportandrating"
-            android:icon="@mipmap/rsz_icon"
-            android:title="Report and Rating">
 
-        </item>
-        <item
-            android:id="@+id/logout"
-            android:icon="@drawable/logout"
-            android:title="Logout"/>
     </group>
+        </menu>
+    </item>
+
+    <item android:title="Share Fare">
+        <menu>
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/sharefareofferlift"
+                    android:icon="@drawable/sharefare"
+                    android:title="@string/Offerlift" />
+                <item
+                    android:id="@+id/sharefareneedlift"
+                    android:icon="@drawable/sharefare"
+                    android:title="@string/needlift" />
+            </group>
+        </menu>
+    </item>
+
+
+    <item android:title="Others">
+        <menu>
+            <group android:checkableBehavior="single">
+            <item
+                android:id="@+id/reportandrating"
+                android:icon="@mipmap/rsz_icon"
+                android:title="Report and Rating"/>
+            <item
+                android:id="@+id/logout"
+                android:icon="@drawable/logout"
+                android:title="Logout"/>
+                <item
+                    android:id="@+id/about"
+                    android:icon="@drawable/logout"
+                    android:title="About"/>
+
+            </group>
+        </menu>
+    </item>
+
+
+
 </menu>
