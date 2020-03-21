@@ -58,8 +58,13 @@
     </fragment>
     <fragment
         android:id="@+id/sharefareneedlift"
-        android:name="com.example.nitctraveltogether.ui.slideshow.SlideshowFragment"
+        android:name="com.example.nitctraveltogether.ui.ShareFareNeedLift"
         android:label="ShareFare NeedLift"
+        tools:layout="@layout/fragment_share_fare_need_lift"/>
+    <fragment
+        android:id="@+id/incomingrequest"
+        android:name="com.example.nitctraveltogether.ui.slideshow.SlideshowFragment"
+        android:label="Incoming Requests"
         tools:layout="@layout/fragment_slideshow">
     </fragment>
 </navigation>

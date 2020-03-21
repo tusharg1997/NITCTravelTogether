@@ -51,5 +51,6 @@
     <string name="title_activity_firstpage">firstpage</string>
     <string name="search_hint">Enter Email to Search</string>
     <string name="app_label">NITCTravelTogether</string>
+    <string name="incomingrequest">Incoming Request</string>
 
 </resources>

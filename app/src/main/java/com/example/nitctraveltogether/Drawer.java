@@ -58,6 +58,7 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.UUID;
 
 import id.zelory.compressor.Compressor;
@@ -149,7 +150,31 @@ public class Drawer extends AppCompatActivity {
         databaseuser1= FirebaseDatabase.getInstance().getReference("tokens");
         databaseuser1.child(email).setValue(s);
     }
+    public void shareFareOfferLift(View view){
+        EditText destination = findViewById(R.id.offerlift);
+        String desti = destination.getText().toString();
+        if(desti.isEmpty()){
+            Toast.makeText(this, "Please Enter Your destination", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        else
+            Toast.makeText(this, desti, Toast.LENGTH_SHORT).show();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        String remail = currentUser.getEmail();
+        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        Date date = new Date();
+        String time = dateFormat.format(date);
+        String id1 = remail.substring(0,remail.length()-11);
+        DatabaseReference databaseuser = FirebaseDatabase.getInstance().getReference("ShareFareOfferLift");
+        HashMap<String, String> hashMap = new HashMap<>();
+        hashMap.put("destination", desti);
+        hashMap.put("time", time);
+        hashMap.put("email", remail);
+        databaseuser.child(id1).setValue(hashMap);
+        Toast.makeText(this, "Lift offered Successfully", Toast.LENGTH_SHORT).show();
 
+
+    }
     public void offerLift(View view) {
         EditText email = findViewById(R.id.email);
         EditText destination = findViewById(R.id.destination);
@@ -161,12 +186,6 @@ public class Drawer extends AppCompatActivity {
         final String rvehicle = vehicle.getText().toString();
 
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        if (currentUser == null) {
-            Intent i = new Intent(this, MainActivity.class);
-            startActivity(i);
-            finish();
-
-        }
         String remail = currentUser.getEmail();
         if (validate(remail, rdestination, rseats, rvehicle) == false)
             return;

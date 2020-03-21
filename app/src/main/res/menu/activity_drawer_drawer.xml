@@ -9,16 +9,21 @@
         <item
             android:id="@+id/nav_home"
             android:icon="@drawable/offerlift"
-            android:title="@string/Offerlift" />
+            android:title="@string/Offerlift"/>
         <item
             android:id="@+id/needlift"
             android:icon="@drawable/needlift"
             android:title="@string/needlift" />
-
+                <item
+                    android:id="@+id/incomingrequest"
+                    android:icon="@drawable/sharefare"
+                    android:title="@string/incomingrequest" />
         <item
             android:id="@+id/map"
             android:icon="@mipmap/rsz_icon"
             android:title="@string/map" />
+
+
 
     </group>
         </menu>
@@ -35,6 +40,7 @@
                     android:id="@+id/sharefareneedlift"
                     android:icon="@drawable/sharefare"
                     android:title="@string/needlift" />
+
             </group>
         </menu>
     </item>
