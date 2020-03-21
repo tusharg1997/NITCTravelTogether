@@ -21,6 +21,12 @@
             android:icon="@mipmap/rsz_icon"
             android:title="@string/map" />
         <item
+            android:id="@+id/reportandrating"
+            android:icon="@mipmap/rsz_icon"
+            android:title="Report and Rating">
+
+        </item>
+        <item
             android:id="@+id/logout"
             android:icon="@drawable/logout"
             android:title="Logout"/>
