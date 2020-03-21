@@ -95,7 +95,7 @@ public class Drawer extends AppCompatActivity {
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.needlift, R.id.sharefare, R.id.logout, R.id.map)
+                R.id.nav_home, R.id.needlift, R.id.sharefare, R.id.logout, R.id.map, R.id.reportandrating)
                 .setDrawerLayout(drawer)
                 .build();
         View hView = navigationView.getHeaderView(0);
