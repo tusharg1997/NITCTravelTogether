@@ -209,29 +209,15 @@ public class ShareFareNeedLift extends Fragment {
 
                 // second listener start
 
-                databaseuser1.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                            int key = Integer.parseInt(ds.getKey().toString());
-                            if (key > count)
-                                count = key;
-                        }
-
-
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                }); // to take count value
-
-                databaseuser1.child(String.valueOf(count+1)).setValue(senderemail);;
+                SimpleDateFormat format = new SimpleDateFormat("yy/MM/dd HH:mm:ss");
+                Date now = new Date();
+                String time = format.format(now);
+                String key = senderemail.substring(0,senderemail.length()-11);
+                databaseuser1.child(key).setValue(time);
                 Toast.makeText(getActivity(),"Request sent",Toast.LENGTH_SHORT).show();
                 databaseuser2 = FirebaseDatabase.getInstance().getReference("tokens");
 
-                databaseuser2.addValueEventListener(new ValueEventListener() {
+                databaseuser2.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         for (DataSnapshot data:dataSnapshot.getChildren())
@@ -276,7 +262,7 @@ public class ShareFareNeedLift extends Fragment {
         pb.setIndeterminate(true);
         pb.setProgress(0);
         pb.show();
-        databaseuser.addValueEventListener(new ValueEventListener() {
+        databaseuser.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 HashMap<String, Object> dataMap = (HashMap<String, Object>) dataSnapshot.getValue();
@@ -325,7 +311,7 @@ public class ShareFareNeedLift extends Fragment {
                 // taking age and gender from user table
                 DatabaseReference userdata = FirebaseDatabase.getInstance().getReference("User").
                         child(list.get(i).email.substring(0, list.get(i).email.length() - 11));
-                userdata.addValueEventListener(new ValueEventListener() {
+                userdata.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         for (DataSnapshot data : dataSnapshot.getChildren()) {

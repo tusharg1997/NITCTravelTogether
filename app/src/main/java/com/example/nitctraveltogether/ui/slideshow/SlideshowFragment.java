@@ -135,7 +135,7 @@ public class SlideshowFragment extends Fragment {
     public void doRemainingWork(List<String> ls, int i){
         TextView txtclose;
         final Button btnFollow,accept,reject;
-        TextView name, email, aseats, tov,destination,age,gender,contactt;
+        TextView name, email,age,gender,contactt;
         mydialog.setContentView(R.layout.popuprequest);
         txtclose =(TextView) mydialog.findViewById(R.id.txtclose);
         name =(TextView) mydialog.findViewById(R.id.name);
@@ -145,7 +145,7 @@ public class SlideshowFragment extends Fragment {
         contactt = (TextView) mydialog.findViewById(R.id.number);
         age.setText(rage);
         gender.setText(rgender);
-        email.setText("Email: "+ ls.get(i));
+        email.setText("Email: "+ ls.get(i)+"@nitc.ac.in");
         txtclose.setText("X");
         name.setText("Name : "+ getName(ls.get(i)));
         txtclose.setOnClickListener(new View.OnClickListener() {
@@ -154,7 +154,7 @@ public class SlideshowFragment extends Fragment {
                 mydialog.dismiss();
             }
         });
-        String temail=ls.get(i);
+        String temail=ls.get(i)+"@nitc.ac.in";
         String tokenemail=temail.substring(0,temail.length()-11);
         accept=mydialog.findViewById(R.id.accept);
         reject=mydialog.findViewById(R.id.reject);
@@ -164,7 +164,7 @@ public class SlideshowFragment extends Fragment {
         String key = AcceptorEmail.substring(0, AcceptorEmail.length()-11);
         AcceptorContact="";
         DatabaseReference user = FirebaseDatabase.getInstance().getReference("User").child(key);
-        user.addValueEventListener(new ValueEventListener() {
+        user.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for(DataSnapshot data: dataSnapshot.getChildren()){
@@ -187,7 +187,7 @@ public class SlideshowFragment extends Fragment {
             public void onClick(View v) {
 
                 databaseuser2 = FirebaseDatabase.getInstance().getReference("tokens");
-                databaseuser2.addValueEventListener(new ValueEventListener() {
+                databaseuser2.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         for (DataSnapshot data:dataSnapshot.getChildren())
@@ -215,7 +215,7 @@ public class SlideshowFragment extends Fragment {
 
                 databaseuser1 = FirebaseDatabase.getInstance().getReference("tokens");
 
-                databaseuser1.addValueEventListener(new ValueEventListener() {
+                databaseuser1.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         for (DataSnapshot data:dataSnapshot.getChildren())
@@ -257,18 +257,20 @@ public class SlideshowFragment extends Fragment {
         pb.show();
         //
         final List<String> ls = new ArrayList<>();
+        final List<String> lsemail = new ArrayList<>();
         final String finalCurrentemail = currentemail;
-        databaseuser.addValueEventListener(new ValueEventListener() {
+        databaseuser.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                int count = 1;
                 for(DataSnapshot ds : dataSnapshot.getChildren()) {
-
-                    String user = ds.getValue(String.class);
-                    count++;
-                    ls.add(user);
+                    String email = ds.getKey().toString();
+                    String time = ds.getValue().toString();
+                    String times[] = time.split(" ", 2);
+                    lsemail.add(email);
+                    ls.add(email+"@nitc.ac.in"  + "  " +times[1]);
                 }
-
+                if(ls.size()==0)
+                    Toast.makeText(getActivity(), "No Request Within One Hour", Toast.LENGTH_LONG).show();
                 ArrayAdapter<String> arrayAdapter = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, ls);
                 list.setAdapter(arrayAdapter);
                 pb.dismiss();
@@ -291,8 +293,8 @@ public class SlideshowFragment extends Fragment {
                 pb.show();
 
                 DatabaseReference userdata = FirebaseDatabase.getInstance().getReference("User").
-                        child(ls.get(i).substring(0,ls.get(i).length()-11));
-                userdata.addValueEventListener(new ValueEventListener() {
+                        child(lsemail.get(i));
+                userdata.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         for (DataSnapshot data:dataSnapshot.getChildren())
@@ -305,7 +307,7 @@ public class SlideshowFragment extends Fragment {
                                 contact = data.getValue().toString();
                         }
                         // now call a function
-                        doRemainingWork(ls,i);
+                        doRemainingWork(lsemail,i);
 
                     }
                     @Override
