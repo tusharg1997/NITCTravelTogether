@@ -45,7 +45,7 @@
             <group android:checkableBehavior="single">
             <item
                 android:id="@+id/reportandrating"
-                android:icon="@mipmap/rsz_icon"
+                android:icon="@drawable/ratereportimage"
                 android:title="Report and Rating"/>
             <item
                 android:id="@+id/logout"
@@ -53,7 +53,7 @@
                 android:title="Logout"/>
                 <item
                     android:id="@+id/about"
-                    android:icon="@drawable/logout"
+                    android:icon="@drawable/about"
                     android:title="About"/>
 
             </group>

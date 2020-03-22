@@ -1,14 +1,30 @@
 package com.example.nitctraveltogether.ui;
 
+import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.RatingBar;
+import android.widget.SearchView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.nitctraveltogether.R;
+import com.example.nitctraveltogether.userrating;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -20,7 +36,20 @@ public class ReportAndRating extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
+    TextView name,email,gender,age;
+    Button reportrate,bsearch,reportbutton;
+    private FirebaseAuth mAuth;
+    DatabaseReference databaseuser;
+    DatabaseReference databaseuser1;
+    DatabaseReference databaseuser2;
+    String profileage,profilefname,profilelname,profilegender,profileemail,reporttext;
+    EditText typedemail;
+    RatingBar rating;
+    EditText report;
+    float rate,alreadyrated;
+    int count=-1,fc;
+    String feedback,feedbackemail;
+    int f;
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -54,12 +83,175 @@ public class ReportAndRating extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_report_and_rating, container, false);
+        View root = inflater.inflate(R.layout.fragment_report_and_rating, container, false);
+
+        //SearchView searchprofile= getActivity().findViewById(R.id.search);
+
+        name=root.findViewById(R.id.name);
+        gender=root.findViewById(R.id.gender);
+        age=root.findViewById(R.id.age);
+        typedemail=root.findViewById(R.id.editText2);
+        email=root.findViewById(R.id.email);
+        reportbutton=root.findViewById(R.id.reportuser);
+        reportrate=root.findViewById(R.id.ratereport);
+
+        report=root.findViewById(R.id.report);
+        rating=root.findViewById(R.id.rating);
+
+        bsearch=root.findViewById(R.id.search);
+        bsearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                profileemail=typedemail.getText().toString().trim();
+                if(profileemail.isEmpty())
+                {
+                    Toast.makeText(getActivity(),"Please type some email to search",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                searchprofilefunction();
+            }
+        });
+
+        reportrate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                rate=rating.getRating();
+                //Toast.makeText(getActivity(),String.valueOf(rate),Toast.LENGTH_SHORT).show();
+               // feedback=report.getText().toString();
+                feedbackemail=typedemail.getText().toString().trim();
+
+                savetodatabase();
+
+            }
+        });
+
+        reportbutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                reporttext=report.getText().toString();
+                feedbackemail=typedemail.getText().toString().trim();
+                savereporttodatabase();
+            }
+        });
+        return root;
+
+    }
+
+    public void searchprofilefunction()
+    {
+
+
+        try{
+            String fsearchemail=profileemail.substring(0,profileemail.length()-11);
+        databaseuser = FirebaseDatabase.getInstance().getReference("User").child(fsearchemail);
+
+            databaseuser.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    for (DataSnapshot data : dataSnapshot.getChildren()) {
+                        if (data.getKey().toString().equalsIgnoreCase("age"))
+                            profileage = ("Age:" + data.getValue().toString());
+                        if (data.getKey().toString().equalsIgnoreCase("gender"))
+                            profilegender = (data.getValue().toString());
+                        if (data.getKey().toString().equalsIgnoreCase("firstname"))
+                            profilefname = data.getValue().toString();
+                        if (data.getKey().toString().equalsIgnoreCase("lastname"))
+                            profilelname = data.getValue().toString();
+                    }
+                    // now call a function
+                    setfields();
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+        } catch (Exception e) {
+            Toast.makeText(getActivity(),"Entered email not found",Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void setfields(){
+        profilefname=profilefname.substring(0, 1).toUpperCase() + profilefname.substring(1);
+        profilelname=profilelname.substring(0, 1).toUpperCase() + profilelname.substring(1);
+        profilegender=profilegender.substring(0, 1).toUpperCase() + profilegender.substring(1);
+        name.setText("Name:"+profilefname+" "+profilelname);
+        email.setText("Email:"+profileemail);
+
+        gender.setText("Gender:"+profilegender);
+        age.setText(profileage);
+        reportrate.setVisibility(View.VISIBLE);
+        report.setVisibility(View.VISIBLE);
+        rating.setVisibility(View.VISIBLE);
+        reportbutton.setVisibility(View.VISIBLE);
+    }
+
+    public void savetodatabase()
+    {
+        String fsearchemail=feedbackemail.substring(0,feedbackemail.length()-11);
+
+        try {
+
+            databaseuser1 = FirebaseDatabase.getInstance().getReference("rating").child(fsearchemail);
+            databaseuser1.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    for (DataSnapshot data : dataSnapshot.getChildren()) {
+                        if (data.getKey().toString().equalsIgnoreCase("count"))
+                            count = Integer.parseInt(data.getValue().toString());
+                        if (data.getKey().toString().equalsIgnoreCase("rate"))
+                            alreadyrated = Float.parseFloat(data.getValue().toString());
+
+                    }
+                    // now call a function
+
+                    save(fsearchemail);
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    // ...
+                }
+            });
+        } catch (Exception e) {
+            Toast.makeText(getActivity(),"Email id not in database",Toast.LENGTH_SHORT).show();
+        }
+
+
+    }
+    public void save(String fsearchemail)
+    {
+        //String fsearchemail=feedbackemail.substring(0,feedbackemail.length()-11);
+        count++;
+        rate=(alreadyrated+rate)/(count);
+        userrating userr=new userrating(rate,count);
+        databaseuser2 = FirebaseDatabase.getInstance().getReference("rating");
+        databaseuser2.child(fsearchemail).child("rate").setValue(rate);
+        databaseuser2.child(fsearchemail).child("count").setValue(count);
+        Toast.makeText(getActivity(),"Rated successfully",Toast.LENGTH_SHORT).show();
+
+    }
+
+    public void savereporttodatabase()
+    {
+        String fsearchemail=feedbackemail.substring(0,feedbackemail.length()-11);
+        final String reporteremail=FirebaseAuth.getInstance().getCurrentUser().getEmail();
+        final String fremail=reporteremail.substring(0,reporteremail.length()-11);
+        try {
+
+            databaseuser1 = FirebaseDatabase.getInstance().getReference("report");
+            databaseuser1.child(fsearchemail).child(fremail).setValue(reporttext);
+            Toast.makeText(getActivity(),"Reported",Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
+            Toast.makeText(getActivity(),"Email id not in database",Toast.LENGTH_SHORT).show();
+        }
     }
 }
