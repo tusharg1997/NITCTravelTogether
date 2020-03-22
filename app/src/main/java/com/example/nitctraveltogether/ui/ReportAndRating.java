@@ -1,6 +1,7 @@
 package com.example.nitctraveltogether.ui;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -50,6 +51,8 @@ public class ReportAndRating extends Fragment {
     int count=-1,fc;
     String feedback,feedbackemail;
     int f;
+    boolean flag;
+    ProgressDialog pb;
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -94,6 +97,7 @@ public class ReportAndRating extends Fragment {
 
         //SearchView searchprofile= getActivity().findViewById(R.id.search);
 
+        pb = new ProgressDialog(getActivity());
         name=root.findViewById(R.id.name);
         gender=root.findViewById(R.id.gender);
         age=root.findViewById(R.id.age);
@@ -109,10 +113,21 @@ public class ReportAndRating extends Fragment {
         bsearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                pb.setMessage("Loading .....");
+                pb.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                pb.setIndeterminate(true);
+                pb.setProgress(0);
+                pb.show();
                 profileemail=typedemail.getText().toString().trim();
-                if(profileemail.isEmpty())
+                if(profileemail.isEmpty() )
                 {
+                    pb.dismiss();
                     Toast.makeText(getActivity(),"Please type some email to search",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if(profileemail.length()<=11){
+                    pb.dismiss();
+                    Toast.makeText(getActivity(), "Please Enter valid Email", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 searchprofilefunction();
@@ -147,7 +162,7 @@ public class ReportAndRating extends Fragment {
     public void searchprofilefunction()
     {
 
-
+      flag = false;
         try{
             String fsearchemail=profileemail.substring(0,profileemail.length()-11);
         databaseuser = FirebaseDatabase.getInstance().getReference("User").child(fsearchemail);
@@ -164,8 +179,15 @@ public class ReportAndRating extends Fragment {
                             profilefname = data.getValue().toString();
                         if (data.getKey().toString().equalsIgnoreCase("lastname"))
                             profilelname = data.getValue().toString();
+                    flag = true;
                     }
                     // now call a function
+                    if(flag == false){
+                        pb.dismiss();
+                        Toast.makeText(getActivity(),"Entered email not found",Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    else
                     setfields();
                 }
 
@@ -175,11 +197,13 @@ public class ReportAndRating extends Fragment {
                 }
             });
         } catch (Exception e) {
+            pb.dismiss();
             Toast.makeText(getActivity(),"Entered email not found",Toast.LENGTH_SHORT).show();
         }
     }
 
     public void setfields(){
+        pb.dismiss();
         profilefname=profilefname.substring(0, 1).toUpperCase() + profilefname.substring(1);
         profilelname=profilelname.substring(0, 1).toUpperCase() + profilelname.substring(1);
         profilegender=profilegender.substring(0, 1).toUpperCase() + profilegender.substring(1);
