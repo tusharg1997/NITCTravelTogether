@@ -186,6 +186,7 @@ public class Drawer extends AppCompatActivity {
         final String rvehicle = vehicle.getText().toString();
 
         FirebaseUser currentUser = mAuth.getCurrentUser();
+
         String remail = currentUser.getEmail();
         if (validate(remail, rdestination, rseats, rvehicle) == false)
             return;
@@ -231,6 +232,7 @@ public class Drawer extends AppCompatActivity {
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
     }
+
 
 
 }

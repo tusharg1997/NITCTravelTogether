@@ -28,6 +28,7 @@ public class Registration extends AppCompatActivity {
     EditText phone;
     EditText age;
     DatabaseReference databaseuser;
+    DatabaseReference databaseuser1;
     public void sendtologin(View view){
         Intent i = new Intent(this, MainActivity.class);
         FirebaseAuth.getInstance().signOut();
@@ -38,6 +39,8 @@ public class Registration extends AppCompatActivity {
         String id = remail.substring(0,remail.length()-11);
         User user = new User(remail,rpassword, rfname, rlname, rphone, rage );
         databaseuser.child(id).setValue(user);
+        userrating userr=new userrating(0,-1);
+        databaseuser1.child(id).setValue(userr);
         Toast.makeText(this, "Registered Successfully, please go to your email and verify your email id.", Toast.LENGTH_SHORT).show();
 
     }
@@ -134,6 +137,7 @@ public class Registration extends AppCompatActivity {
         phone = findViewById(R.id.rage);
        FirebaseDatabase data =  FirebaseDatabase.getInstance();
        databaseuser = FirebaseDatabase.getInstance().getReference("User");
+       databaseuser = FirebaseDatabase.getInstance().getReference("rating");
 
 
     }
