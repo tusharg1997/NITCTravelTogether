@@ -41,12 +41,14 @@ public class ReportAndRating extends Fragment {
     Button reportrate,bsearch,reportbutton;
     private FirebaseAuth mAuth;
     DatabaseReference databaseuser;
+    DatabaseReference databaseuserforrating;
     DatabaseReference databaseuser1;
     DatabaseReference databaseuser2;
     String profileage,profilefname,profilelname,profilegender,profileemail,reporttext;
     EditText typedemail;
     RatingBar rating;
     EditText report;
+    String currating;
     float rate,alreadyrated;
     int count=-1,fc;
     String feedback,feedbackemail;
@@ -108,7 +110,6 @@ public class ReportAndRating extends Fragment {
 
         report=root.findViewById(R.id.report);
         rating=root.findViewById(R.id.rating);
-
         bsearch=root.findViewById(R.id.search);
         bsearch.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -130,7 +131,23 @@ public class ReportAndRating extends Fragment {
                     Toast.makeText(getActivity(), "Please Enter valid Email", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                searchprofilefunction();
+                String fsearchemail=profileemail.substring(0,profileemail.length()-11);
+                databaseuserforrating=FirebaseDatabase.getInstance().getReference("rating").child(fsearchemail);
+                databaseuserforrating.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        for (DataSnapshot data : dataSnapshot.getChildren()) {
+                            if (data.getKey().toString().equalsIgnoreCase("rate"))
+                                currating = (data.getValue().toString());
+                        }
+                        searchprofilefunction();
+                    }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+
             }
         });
 
@@ -165,14 +182,14 @@ public class ReportAndRating extends Fragment {
       flag = false;
         try{
             String fsearchemail=profileemail.substring(0,profileemail.length()-11);
-        databaseuser = FirebaseDatabase.getInstance().getReference("User").child(fsearchemail);
+            databaseuser = FirebaseDatabase.getInstance().getReference("User").child(fsearchemail);
 
-            databaseuser.addValueEventListener(new ValueEventListener() {
+            databaseuser.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     for (DataSnapshot data : dataSnapshot.getChildren()) {
                         if (data.getKey().toString().equalsIgnoreCase("age"))
-                            profileage = ("Age:" + data.getValue().toString());
+                            profileage = ("Age: " + data.getValue().toString());
                         if (data.getKey().toString().equalsIgnoreCase("gender"))
                             profilegender = (data.getValue().toString());
                         if (data.getKey().toString().equalsIgnoreCase("firstname"))
@@ -207,11 +224,13 @@ public class ReportAndRating extends Fragment {
         profilefname=profilefname.substring(0, 1).toUpperCase() + profilefname.substring(1);
         profilelname=profilelname.substring(0, 1).toUpperCase() + profilelname.substring(1);
         profilegender=profilegender.substring(0, 1).toUpperCase() + profilegender.substring(1);
-        name.setText("Name:"+profilefname+" "+profilelname);
-        email.setText("Email:"+profileemail);
-
-        gender.setText("Gender:"+profilegender);
-        age.setText(profileage);
+        name.setText("Name: "+profilefname+" "+profilelname);
+        email.setText("Email: "+profileemail);
+        rating.setRating(Float.parseFloat(currating));
+        gender.setText("Gender: "+profilegender);
+        if(currating.length()>3)
+            currating=currating.substring(0,3);
+        age.setText(profileage+"         Rating: "+currating);
         reportrate.setVisibility(View.VISIBLE);
         report.setVisibility(View.VISIBLE);
         rating.setVisibility(View.VISIBLE);
@@ -255,7 +274,7 @@ public class ReportAndRating extends Fragment {
     {
         //String fsearchemail=feedbackemail.substring(0,feedbackemail.length()-11);
         count++;
-        rate=(alreadyrated+rate)/(count);
+        rate=(((count-1)*alreadyrated)+rate)/(count);
         userrating userr=new userrating(rate,count);
         databaseuser2 = FirebaseDatabase.getInstance().getReference("rating");
         databaseuser2.child(fsearchemail).child("rate").setValue(rate);
