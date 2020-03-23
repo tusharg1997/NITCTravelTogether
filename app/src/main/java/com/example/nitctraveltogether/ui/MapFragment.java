@@ -302,16 +302,20 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
             public void onKeyEntered(String key, GeoLocation location) {
                 if(location.equals(geoLocation))
                     return;
-                for(Marker markerIt : markers){
-                    if(markerIt.getTag().equals(key))
-                        return;
+                try {
+                    for(Marker markerIt : markers){
+                        if(markerIt.getTag().equals(key))
+                            return;
+                    }
+                } catch (Exception e) {
+                    Toast.makeText(getActivity(),"Not able to refresh map, you can reload map",Toast.LENGTH_SHORT).show();
                 }
+
                 // Toast.makeText(firstpage.this,"before location",Toast.LENGTH_LONG).show();
                 // Toast.makeText(firstpage.this,String.valueOf(location.latitude)+" "+String.valueOf(location.longitude),Toast.LENGTH_LONG).show();
                 LatLng userLocation = new LatLng(location.latitude, location.longitude);
 
                 Marker muserMarker = mMap.addMarker(new MarkerOptions().position(userLocation).title(key).icon(BitmapDescriptorFactory.fromResource(R.mipmap.rsz_icon)));
-
                 muserMarker.setTag(key);
 
                 markers.add(muserMarker);
@@ -319,22 +323,28 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
 
             @Override
             public void onKeyExited(String key) {
-
-                for(Marker markerIt : markers){
-                    if(markerIt.getTag().equals(key)){
-                        markerIt.remove();
-                        markers.remove(markerIt);
+                try {
+                    for (Marker markerIt : markers) {
+                        if (markerIt.getTag().equals(key)) {
+                            markerIt.remove();
+                            markers.remove(markerIt);
+                        }
                     }
+                } catch (Exception e) {
+                    Toast.makeText(getActivity(),"Not able to refresh map, you can reload map",Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onKeyMoved(String key, GeoLocation location) {
-
-                for(Marker markerIt : markers){
-                    if(markerIt.getTag().equals(key)){
-                        markerIt.setPosition(new LatLng(location.latitude, location.longitude));
+                try {
+                    for (Marker markerIt : markers) {
+                        if (markerIt.getTag().equals(key)) {
+                            markerIt.setPosition(new LatLng(location.latitude, location.longitude));
+                        }
                     }
+                } catch (Exception e) {
+                    Toast.makeText(getActivity(),"Not able to refresh map, you can reload map",Toast.LENGTH_SHORT).show();
                 }
             }
 
