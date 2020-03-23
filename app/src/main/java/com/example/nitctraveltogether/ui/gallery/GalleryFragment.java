@@ -70,7 +70,6 @@ class request{
 public class GalleryFragment extends Fragment {
 
     TextView name, email, aseats, tov,destination,age,gender;
-
     String rage="Age :";
     String rgender="Gender : ";
     Dialog mydialog;
@@ -103,6 +102,26 @@ public class GalleryFragment extends Fragment {
         return temp;
     }
 
+    public void doremaining(List<Offer> list, int i){
+        age.setText(rage);
+        gender.setText(rgender);
+        aseats =(TextView) mydialog.findViewById(R.id.availableseats);
+        destination =(TextView) mydialog.findViewById(R.id.destination);
+        tov =(TextView) mydialog.findViewById(R.id.typeofvehicle);
+        email.setText("Email: "+ list.get(i).email);
+        aseats.setText("No. of Seats "+ list.get(i).availableSeats);
+        final String receiveremail=list.get(i).email.substring(0,list.get(i).email.length()-11);
+        databaseuser1 = FirebaseDatabase.getInstance().getReference("request").child(receiveremail);
+        tov.setText("Type of Vehicle "+ list.get(i).vehicleType);
+
+        name.setText("Name : "+ getName(list.get(i).email));
+        destination.setText("Destination "+ list.get(i).destination);
+        pb.dismiss();
+        mydialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        mydialog.show();
+
+
+    }
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         FirebaseDatabase data =  FirebaseDatabase.getInstance();
@@ -176,7 +195,7 @@ public class GalleryFragment extends Fragment {
             public void onItemClick(AdapterView<?> adapterView, View view, final int i, long l) {
                 TextView txtclose;
                 final Button btnFollow;
-                TextView name, email, aseats, tov,destination,age,gender;
+
                 mydialog.setContentView(R.layout.custompopup);
                 txtclose =(TextView) mydialog.findViewById(R.id.txtclose);
                 name =(TextView) mydialog.findViewById(R.id.name);
@@ -184,7 +203,11 @@ public class GalleryFragment extends Fragment {
                 age = (TextView) mydialog.findViewById(R.id.age);
                 gender = (TextView) mydialog.findViewById(R.id.gender);
                 // accessing age and gender from user table
-
+                pb.setMessage("Loading .....");
+                pb.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                pb.setIndeterminate(true);
+                pb.setProgress(0);
+                pb.show();
                 DatabaseReference userdata = FirebaseDatabase.getInstance().getReference("User").
                         child(list.get(i).email.substring(0,list.get(i).email.length()-11));
                 userdata.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -197,7 +220,7 @@ public class GalleryFragment extends Fragment {
                             if(data.getKey().toString().equalsIgnoreCase("gender"))
                             rgender = ("Gender: "+ data.getValue().toString());
                         }
-
+                    doremaining(list, i);
 
                     }
 
@@ -206,22 +229,8 @@ public class GalleryFragment extends Fragment {
 
                     }
                 });
-            age.setText(rage);
-            gender.setText(rgender);
-                aseats =(TextView) mydialog.findViewById(R.id.availableseats);
-                destination =(TextView) mydialog.findViewById(R.id.destination);
-                tov =(TextView) mydialog.findViewById(R.id.typeofvehicle);
-                email.setText("Email: "+ list.get(i).email);
-                aseats.setText("No. of Seats "+ list.get(i).availableSeats);
-                final String receiveremail=list.get(i).email.substring(0,list.get(i).email.length()-11);
-                databaseuser1 = FirebaseDatabase.getInstance().getReference("request").child(receiveremail);
-                tov.setText("Type of Vehicle "+ list.get(i).vehicleType);
-
-                name.setText("Name : "+ getName(list.get(i).email));
-                destination.setText("Destination "+ list.get(i).destination);
                 txtclose.setText("X");
                 btnFollow = (Button) mydialog.findViewById(R.id.btnsendrequest);
-
                 txtclose.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -229,8 +238,8 @@ public class GalleryFragment extends Fragment {
                     }
                 });
                  int x;
-                mydialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                mydialog.show();
+
+                final String receiveremail=list.get(i).email.substring(0,list.get(i).email.length()-11);
                 final ArrayList<String> ls = new ArrayList<String>();
                 btnFollow.setOnClickListener(new View.OnClickListener() {
                     @RequiresApi(api = Build.VERSION_CODES.O)
