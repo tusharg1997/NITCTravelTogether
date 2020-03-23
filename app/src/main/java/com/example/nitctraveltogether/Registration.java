@@ -137,7 +137,7 @@ public class Registration extends AppCompatActivity {
         phone = findViewById(R.id.rage);
        FirebaseDatabase data =  FirebaseDatabase.getInstance();
        databaseuser = FirebaseDatabase.getInstance().getReference("User");
-       databaseuser = FirebaseDatabase.getInstance().getReference("rating");
+       databaseuser1 = FirebaseDatabase.getInstance().getReference("rating");
 
 
     }

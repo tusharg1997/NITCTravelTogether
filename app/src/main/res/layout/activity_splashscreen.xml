@@ -10,7 +10,7 @@
     <TextView
         android:id="@+id/projectname"
         android:layout_width="400dp"
-        android:layout_height="140dp"
+        android:layout_height="154dp"
         android:fontFamily="monospace"
         android:text="NITC Travel Together"
         android:textColor="#FFFFFF"
