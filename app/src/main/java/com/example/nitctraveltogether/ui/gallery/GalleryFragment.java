@@ -206,8 +206,8 @@ public class GalleryFragment extends Fragment {
 
                     }
                 });
-            age.setText(rage);
-            gender.setText(rgender);
+                age.setText(rage);
+                gender.setText(rgender);
                 aseats =(TextView) mydialog.findViewById(R.id.availableseats);
                 destination =(TextView) mydialog.findViewById(R.id.destination);
                 tov =(TextView) mydialog.findViewById(R.id.typeofvehicle);
