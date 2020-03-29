@@ -274,10 +274,13 @@ public class ReportAndRating extends Fragment {
     {
         //String fsearchemail=feedbackemail.substring(0,feedbackemail.length()-11);
         count++;
+        if(count>0)
         rate=(((count-1)*alreadyrated)+rate)/(count);
         userrating userr=new userrating(rate,count);
         databaseuser2 = FirebaseDatabase.getInstance().getReference("rating");
         databaseuser2.child(fsearchemail).child("rate").setValue(rate);
+        if(count==0)
+            count=1;
         databaseuser2.child(fsearchemail).child("count").setValue(count);
         Toast.makeText(getActivity(),"Rated successfully",Toast.LENGTH_SHORT).show();
 

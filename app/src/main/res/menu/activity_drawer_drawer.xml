@@ -16,7 +16,7 @@
             android:title="@string/needlift" />
                 <item
                     android:id="@+id/incomingrequest"
-                    android:icon="@drawable/sharefare"
+                    android:icon="@drawable/incomingrequest"
                     android:title="@string/incomingrequest" />
         <item
             android:id="@+id/map"
