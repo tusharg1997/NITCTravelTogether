@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -27,6 +28,8 @@ public class Registration extends AppCompatActivity {
     EditText lname;
     EditText phone;
     EditText age;
+    RadioButton male,female;
+
     DatabaseReference databaseuser;
     DatabaseReference databaseuser1;
     public void sendtologin(View view){
@@ -35,9 +38,10 @@ public class Registration extends AppCompatActivity {
         startActivity(i);
         finish();
     }
-    public void saveToDatabase(String remail, String rpassword, String rfname, String rlname, String rphone, String rage){
+    public void saveToDatabase(String remail, String rpassword, String rfname, String rlname, String rphone, String rage, String rgender){
         String id = remail.substring(0,remail.length()-11);
-        User user = new User(remail,rpassword, rfname, rlname, rphone, rage );
+        User user = new User(remail,rpassword, rfname, rlname, rphone, rage, rgender );
+
         databaseuser.child(id).setValue(user);
         userrating userr=new userrating(0,-1);
         databaseuser1.child(id).setValue(userr);
@@ -45,10 +49,10 @@ public class Registration extends AppCompatActivity {
 
     }
 
-    boolean validate(String remail, String rpassword, String rfname, String rlname, String rphone, String rage )
+    boolean validate(String remail, String rpassword, String rfname, String rlname, String rphone, String rage ,String rgender)
     {
         boolean flag=true;
-        if(remail.isEmpty() || rpassword.isEmpty() || rfname.isEmpty() || rlname.isEmpty() || rphone.isEmpty() || rage.isEmpty())
+        if(remail.isEmpty() || rpassword.isEmpty() || rfname.isEmpty() || rlname.isEmpty() || rphone.isEmpty() || rage.isEmpty()||rgender.isEmpty())
         {
             Toast.makeText(this, "Enter all fields", Toast.LENGTH_SHORT).show();
             flag = false;
@@ -77,14 +81,22 @@ public class Registration extends AppCompatActivity {
         lname = findViewById(R.id.rlname);
         age = findViewById(R.id.rage);
         phone = findViewById(R.id.rphone);
+        male=findViewById(R.id.rgenderm);
+        female=findViewById(R.id.rgenderf);
         final String remail=email.getText().toString();
         final String rpassword=password.getText().toString();
         final String rfname=fname.getText().toString();
         final String rlname=lname.getText().toString();
         final String rphone=phone.getText().toString();
         final String rage=age.getText().toString();
-
-        if(validate(remail, rpassword, rfname, rlname, rphone, rage) == false){
+        String rgender = "";
+        if(male.isChecked())
+            rgender=male.getText().toString();
+        else if(female.isChecked())
+            rgender=female.getText().toString();
+        final String frgender=rgender;
+        Toast.makeText(Registration.this,"Hello"+frgender,Toast.LENGTH_SHORT);
+        if(validate(remail, rpassword, rfname, rlname, rphone, rage,rgender) == false){
             return;
         }
         mAuth.createUserWithEmailAndPassword(remail, rpassword)
@@ -101,7 +113,7 @@ public class Registration extends AppCompatActivity {
 
 //                                        Toast.makeText(Registration.this, "Email Registered, Please check your email for verification. Key="+user.getUid(),
 //                                                Toast.LENGTH_SHORT).show();
-                                        saveToDatabase(remail, rpassword, rfname, rlname, rphone, rage);
+                                        saveToDatabase(remail, rpassword, rfname, rlname, rphone, rage,frgender);
 
 
 
@@ -135,6 +147,8 @@ public class Registration extends AppCompatActivity {
         lname = findViewById(R.id.rlname);
         age = findViewById(R.id.rage);
         phone = findViewById(R.id.rage);
+        male=findViewById(R.id.rgenderm);
+        female=findViewById(R.id.rgenderf);
        FirebaseDatabase data =  FirebaseDatabase.getInstance();
        databaseuser = FirebaseDatabase.getInstance().getReference("User");
        databaseuser1 = FirebaseDatabase.getInstance().getReference("rating");
