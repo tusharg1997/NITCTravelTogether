@@ -6,6 +6,16 @@
     android:layout_height="match_parent"
     tools:context=".ui.gallery.GalleryFragment">
 
+    <TextView
+        android:id="@+id/msg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"
+        android:textSize="30dp"
+        android:text="Sorry.. There is no Lift within one Hour">
+
+    </TextView>
+
     <ListView
         android:id="@+id/listview"
         android:layout_width="369dp"

@@ -75,7 +75,7 @@ public class ShareFareNeedLift extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-    TextView name, email, aseats, tov,destination,age,gender;
+    TextView name, email, aseats, tov,destination,age,gender,msg;
 
     String rage="Age :";
     String rgender="Gender : ";
@@ -249,6 +249,7 @@ public class ShareFareNeedLift extends Fragment {
         int x;
         pb = new ProgressDialog(getActivity());
         lv  = root.findViewById(R.id.listview);
+        msg = root.findViewById(R.id.msg);
         pref=getActivity().getSharedPreferences("user",MODE_PRIVATE);
         final String senderemail=FirebaseAuth.getInstance().getCurrentUser().getEmail();
         String key = senderemail.substring(0,senderemail.length()-11);
@@ -272,12 +273,12 @@ public class ShareFareNeedLift extends Fragment {
 
                         HashMap<String,Object> userData = (HashMap<String,Object>) data;
                         String offertime = userData.get("time").toString();
-                        SimpleDateFormat format = new SimpleDateFormat("yy/MM/dd HH:mm:ss");
+                        SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
                         Date d1= format.parse(offertime);
                         Date now = new Date();
                         long duration  = now.getTime() - d1.getTime();
                         long diffInHours = TimeUnit.MILLISECONDS.toHours(duration);
-                        if(diffInHours> 1)
+                        if(diffInHours>= 1)
                             continue;
                         OfferShare offer = new OfferShare( (String)userData.get("email"), (String) userData.get("destination"), (String) userData.get("time"));
                         if(!offer.email.equalsIgnoreCase(senderemail))
@@ -297,6 +298,14 @@ public class ShareFareNeedLift extends Fragment {
                 ArrayAdapter<String> arrayAdapter = new ArrayAdapter(getActivity(), android.R.layout.select_dialog_item, list1);
                 lv.setAdapter(arrayAdapter);
                 pb.dismiss();
+                if(list1.size()==0)
+                {
+                    msg.setVisibility(View.VISIBLE);
+                    //Toast.makeText(getActivity(), "Sorry... There is no lift within One Hour", Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    msg.setVisibility(View.INVISIBLE);
+                }
 
             }
             @Override

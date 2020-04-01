@@ -34,9 +34,12 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -64,6 +67,7 @@ public class SlideshowFragment extends Fragment {
     String rgender="Gender : ";
     String contact="";
     String token=null;
+    TextView msg;
     Dialog mydialog;
     DatabaseReference databaseuser;
     DatabaseReference databaseuser2;
@@ -245,6 +249,7 @@ public class SlideshowFragment extends Fragment {
                 ViewModelProviders.of(this).get(SlideshowViewModel.class);
         View root = inflater.inflate(R.layout.fragment_slideshow, container, false);
         list=root.findViewById(R.id.requests);
+        msg = root.findViewById(R.id.msg);
         String currentemail = FirebaseAuth.getInstance().getCurrentUser().getEmail();
         currentemail = currentemail.substring(0,currentemail.length()-11);
         databaseuser = FirebaseDatabase.getInstance().getReference("request").child(currentemail);
@@ -263,17 +268,36 @@ public class SlideshowFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for(DataSnapshot ds : dataSnapshot.getChildren()) {
-                    String email = ds.getKey().toString();
-                    String time = ds.getValue().toString();
-                    String times[] = time.split(" ", 2);
-                    lsemail.add(email);
-                    ls.add(email+"@nitc.ac.in"  + "  " +times[1]);
+                    try {
+                        String email = ds.getKey().toString();
+                        String time = ds.getValue().toString();
+                        SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+                        Date d1 = format.parse(time);
+                        Date now = new Date();
+                        long duration = now.getTime() - d1.getTime();
+                        long diffInHours = TimeUnit.MILLISECONDS.toHours(duration);
+                        if (diffInHours >= 1)
+                            continue;
+                        String times[] = time.split(" ", 2);
+                        lsemail.add(email);
+                        ls.add(email + "@nitc.ac.in" + "  " + times[1]);
+                    }
+                    catch (Exception e)
+                    {
+                        Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
                 }
-                if(ls.size()==0)
-                    Toast.makeText(getActivity(), "No Request Within One Hour", Toast.LENGTH_LONG).show();
+
                 ArrayAdapter<String> arrayAdapter = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, ls);
                 list.setAdapter(arrayAdapter);
                 pb.dismiss();
+                if(ls.size()==0) {
+                    msg.setVisibility(View.VISIBLE);
+                    //Toast.makeText(getActivity(), "No Request Within One Hour", Toast.LENGTH_LONG).show();
+                }
+                else{
+                    msg.setVisibility(View.INVISIBLE);
+                }
 
             }
             @Override
