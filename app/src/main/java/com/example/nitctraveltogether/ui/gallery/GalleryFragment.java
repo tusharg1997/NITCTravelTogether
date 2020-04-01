@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -69,7 +70,7 @@ class request{
 }
 public class GalleryFragment extends Fragment {
 
-    TextView name, email, aseats, tov,destination,age,gender;
+    TextView name, email, aseats, tov,destination,age,gender,msg;
     String rage="Age :";
     String rgender="Gender : ";
     Dialog mydialog;
@@ -133,6 +134,7 @@ public class GalleryFragment extends Fragment {
         pb = new ProgressDialog(getActivity());
         View root = inflater.inflate(R.layout.fragment_gallery, container, false);
         lv  = root.findViewById(R.id.listview);
+        msg = root.findViewById(R.id.msg);
 
         pref=getActivity().getSharedPreferences("user",MODE_PRIVATE);
         final String senderemail=FirebaseAuth.getInstance().getCurrentUser().getEmail();
@@ -157,12 +159,12 @@ public class GalleryFragment extends Fragment {
 
                         HashMap<String,Object> userData = (HashMap<String,Object>) data;
                         String offertime = userData.get("time").toString();
-                        SimpleDateFormat format = new SimpleDateFormat("yy/MM/dd HH:mm:ss");
+                        SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
                         Date d1= format.parse(offertime);
                         Date now = new Date();
                         long duration  = now.getTime() - d1.getTime();
                         long diffInHours = TimeUnit.MILLISECONDS.toHours(duration);
-                        if(diffInHours> 1)
+                        if(diffInHours>= 1)
                             continue;
                         Offer offer = new Offer( (String)userData.get("email"), (String) userData.get("destination"),
                                 (String) userData.get("availableSeats"), (String) userData.get("vehicleType"),(String) userData.get("time"));
@@ -183,7 +185,14 @@ public class GalleryFragment extends Fragment {
                 ArrayAdapter<String> arrayAdapter = new ArrayAdapter(getActivity(), android.R.layout.select_dialog_item, list1);
                 lv.setAdapter(arrayAdapter);
                 pb.dismiss();
-              
+                if(list1.size()==0){
+                    msg.setVisibility(View.VISIBLE);
+                    //Toast.makeText(getActivity(), " Sorry ... There is no request of within one hour", Toast.LENGTH_LONG).show();
+                }
+                else{
+                    msg.setVisibility(View.INVISIBLE);
+                }
+
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {

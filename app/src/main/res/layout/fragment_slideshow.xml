@@ -6,6 +6,13 @@
     android:layout_height="match_parent"
     tools:context=".ui.slideshow.SlideshowFragment">
 
+    <TextView
+        android:id="@+id/msg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"
+        android:textSize="30dp"
+        android:text="Sorry.. There is no Request within one Hour"/>
     <ListView
         android:id="@+id/requests"
         android:layout_width="384dp"
