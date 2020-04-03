@@ -267,8 +267,10 @@ public class SlideshowFragment extends Fragment {
         databaseuser.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
                 for(DataSnapshot ds : dataSnapshot.getChildren()) {
                     try {
+
                         String email = ds.getKey().toString();
                         String time = ds.getValue().toString();
                         SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");

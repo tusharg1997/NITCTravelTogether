@@ -209,7 +209,7 @@ public class ShareFareNeedLift extends Fragment {
 
                 // second listener start
 
-                SimpleDateFormat format = new SimpleDateFormat("yy/MM/dd HH:mm:ss");
+                SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
                 Date now = new Date();
                 String time = format.format(now);
                 String key = senderemail.substring(0,senderemail.length()-11);
