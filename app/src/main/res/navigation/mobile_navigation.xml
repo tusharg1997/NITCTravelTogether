@@ -32,7 +32,7 @@
     <fragment
         android:id="@+id/needlift"
         android:name="com.example.nitctraveltogether.ui.gallery.GalleryFragment"
-        android:label="@string/needlift"
+        android:label="Current offers of lift"
         tools:layout="@layout/fragment_gallery" />
     <fragment
         android:id="@+id/logout"
@@ -65,6 +65,12 @@
         android:id="@+id/incomingrequest"
         android:name="com.example.nitctraveltogether.ui.slideshow.SlideshowFragment"
         android:label="Incoming Requests"
-        tools:layout="@layout/fragment_slideshow">
-    </fragment>
+        tools:layout="@layout/fragment_slideshow"/>
+    <fragment
+        android:id="@+id/currentlyactive"
+        android:name="com.example.nitctraveltogether.ui.CurrentlyActive"
+        android:label="Corrently Active"
+        tools:layout="@layout/fragment_currently_active"/>
+
+
 </navigation>

@@ -18,6 +18,11 @@
                     android:id="@+id/incomingrequest"
                     android:icon="@drawable/incomingrequest"
                     android:title="@string/incomingrequest" />
+                <item
+                    android:id="@+id/currentlyactive"
+                    android:icon="@drawable/incomingrequest"
+                    android:title="Corrently Active"/>
+
         <item
             android:id="@+id/map"
             android:icon="@mipmap/rsz_icon"
