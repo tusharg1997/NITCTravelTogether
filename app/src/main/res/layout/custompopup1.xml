@@ -75,7 +75,7 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="25dp"
         android:background="#000000"
-        android:text="Send Request"
+        android:text="Send Request for lift"
         android:textColor="@color/white" />
 
 </LinearLayout>
