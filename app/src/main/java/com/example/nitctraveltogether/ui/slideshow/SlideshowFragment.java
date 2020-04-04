@@ -62,6 +62,7 @@ public class SlideshowFragment extends Fragment {
         }
         return temp;
     }
+    int f=0;
     ProgressDialog pb;
     String rage="Age :";
     String rgender="Gender : ";
@@ -72,6 +73,9 @@ public class SlideshowFragment extends Fragment {
     DatabaseReference databaseuser;
     DatabaseReference databaseuser2;
     DatabaseReference databaseuser1;
+    DatabaseReference databaseuseracceptor;
+    DatabaseReference databaseuserremove;
+    DatabaseReference databaseuserted;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener firebaseAuthListener;
     private SlideshowViewModel slideshowViewModel;
@@ -80,7 +84,7 @@ public class SlideshowFragment extends Fragment {
     String AcceptorContact="";
     //Sending Notification
 
-    private void sendacceptnotification(String contactNo)
+    private void sendacceptnotification(String contactNo,String tokenemail)
     {
         String email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
         String title="Request accepted";
@@ -106,6 +110,38 @@ public class SlideshowFragment extends Fragment {
 
             }
         });
+
+        //Current active
+        try {
+            databaseuseracceptor = FirebaseDatabase.getInstance().getReference("currentactive").child(email.substring(0, email.length() - 11));
+
+            databaseuseracceptor.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.exists())
+                        f = (int) dataSnapshot.getChildrenCount();
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+            //Toast.makeText(getActivity(),String.valueOf(f),Toast.LENGTH_SHORT).show();
+            if (f == 0) {
+                databaseuseracceptor = FirebaseDatabase.getInstance().getReference("currentactive").child(email.substring(0, email.length() - 11));
+                databaseuseracceptor.child("1").setValue(tokenemail);
+            } else {
+                databaseuseracceptor = FirebaseDatabase.getInstance().getReference("currentactive").child(email.substring(0, email.length() - 11));
+                databaseuseracceptor.child(String.valueOf(f + 1)).setValue(tokenemail);
+            }
+            FirebaseDatabase.getInstance().getReference("request").child(email.substring(0, email.length() - 11)).child(tokenemail).removeValue();
+            databaseuserremove = FirebaseDatabase.getInstance().getReference("currentactive").child(tokenemail);
+            databaseuserremove.child("1").setValue(email.substring(0, email.length() - 11));
+        } catch (Exception e) {
+            Toast.makeText(getActivity(),"Error in current active", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void sendrejectnotification()
@@ -202,7 +238,7 @@ public class SlideshowFragment extends Fragment {
                             { token = value;}
                         }
                         contactt.setText("Contact " + contact);
-                        sendacceptnotification(AcceptorContact);
+                        sendacceptnotification(AcceptorContact,tokenemail);
                     }
 
                     @Override
