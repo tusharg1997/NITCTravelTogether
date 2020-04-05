@@ -113,7 +113,7 @@
         android:layout_marginBottom="24dp"
         android:background="@drawable/rounded_rect"
         android:drawablePadding="10dp"
-        android:hint="@string/emailReg"
+        android:hint="NITC Email"
         android:inputType="textEmailAddress"
         android:paddingStart="10dp"
         android:paddingEnd="10dp"
