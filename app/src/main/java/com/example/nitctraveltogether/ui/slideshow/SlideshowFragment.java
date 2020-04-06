@@ -113,32 +113,13 @@ public class SlideshowFragment extends Fragment {
 
         //Current active
         try {
-            databaseuseracceptor = FirebaseDatabase.getInstance().getReference("currentactive").child(email.substring(0, email.length() - 11));
 
-            databaseuseracceptor.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    if (dataSnapshot.exists())
-                        f = (int) dataSnapshot.getChildrenCount();
 
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                }
-            });
-            //Toast.makeText(getActivity(),String.valueOf(f),Toast.LENGTH_SHORT).show();
-            if (f == 0) {
                 databaseuseracceptor = FirebaseDatabase.getInstance().getReference("currentactive").child(email.substring(0, email.length() - 11));
-                databaseuseracceptor.child("1").setValue(tokenemail);
-            } else {
-                databaseuseracceptor = FirebaseDatabase.getInstance().getReference("currentactive").child(email.substring(0, email.length() - 11));
-                databaseuseracceptor.child(String.valueOf(f + 1)).setValue(tokenemail);
-            }
+                databaseuseracceptor.child(tokenemail).setValue(tokenemail+"@nitc.ac.in");
             FirebaseDatabase.getInstance().getReference("request").child(email.substring(0, email.length() - 11)).child(tokenemail).removeValue();
             databaseuserremove = FirebaseDatabase.getInstance().getReference("currentactive").child(tokenemail);
-            databaseuserremove.child("1").setValue(email.substring(0, email.length() - 11));
+            databaseuserremove.child(email.substring(0, email.length() - 11)).setValue(email);
         } catch (Exception e) {
             Toast.makeText(getActivity(),"Error in current active", Toast.LENGTH_SHORT).show();
         }
