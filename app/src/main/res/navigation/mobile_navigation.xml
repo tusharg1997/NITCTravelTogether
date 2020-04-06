@@ -69,7 +69,7 @@
     <fragment
         android:id="@+id/currentlyactive"
         android:name="com.example.nitctraveltogether.ui.CurrentlyActive"
-        android:label="Corrently Active"
+        android:label="Current Active"
         tools:layout="@layout/fragment_currently_active"/>
 
 

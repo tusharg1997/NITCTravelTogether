@@ -119,7 +119,7 @@
                 android:layout_marginRight="20dp"
                 android:ems="10"
                 android:gravity="start|top"
-                android:hint="Enter your user feedback here"
+                android:hint="Report an issue"
                 android:inputType="textMultiLine"
                 android:visibility="invisible" />
 
