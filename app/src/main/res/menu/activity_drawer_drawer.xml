@@ -21,7 +21,7 @@
                 <item
                     android:id="@+id/currentlyactive"
                     android:icon="@drawable/incomingrequest"
-                    android:title="Corrently Active"/>
+                    android:title="Currently Active"/>
 
         <item
             android:id="@+id/map"
