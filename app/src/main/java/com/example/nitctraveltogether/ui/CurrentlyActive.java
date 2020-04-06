@@ -115,7 +115,7 @@ public class CurrentlyActive extends Fragment {
                         for (DataSnapshot data:dataSnapshot.getChildren())
                         {
                             String value=data.getValue().toString();
-                            modelClassList.add(new ModelClass("Name: "+getName(value), "Email: "+value+"@nitc.ac.in"));
+                            modelClassList.add(new ModelClass("Name: "+getName(value), "Email: "+value));
                         }
                         Adapter adapter = new Adapter(modelClassList);
                         recyclerView.setAdapter(adapter);
@@ -130,10 +130,24 @@ public class CurrentlyActive extends Fragment {
 
                             @Override
                             public void onDeleteClick(int position) {
-                               modelClassList.remove(position);
-                               adapter.notifyItemRemoved(position);
-                               if(modelClassList.size() == 0)
-                                   message.setVisibility(View.VISIBLE);
+                                try {
+                                    ModelClass obj = modelClassList.get(position);
+                                    String email = obj.getEmail();
+                                    email = email.substring(7, email.length() - 11);
+
+                                    String myemail = FirebaseAuth.getInstance().getCurrentUser().getEmail();
+                                    myemail = myemail.substring(0, myemail.length() - 11);
+                                    FirebaseDatabase.getInstance().getReference("currentactive").child(myemail).child(email).removeValue();
+                                    modelClassList.remove(position);
+                                    adapter.notifyItemRemoved(position);
+                                    if (modelClassList.size() == 0)
+                                        message.setVisibility(View.VISIBLE);
+                                }
+                                catch(Exception e)
+                                {
+                                    Toast.makeText(getActivity(), e.getMessage().toString(), Toast.LENGTH_SHORT).show();
+                                }
+
                             }
                         });
                     }
