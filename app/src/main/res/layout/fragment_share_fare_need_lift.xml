@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="?android:windowBackground"
     tools:context=".ui.ShareFareNeedLift">
 
     <!-- TODO: Update blank fragment layout -->
@@ -13,7 +14,8 @@
         android:layout_height="wrap_content"
         android:visibility="invisible"
         android:textSize="30dp"
-        android:text="Sorry.. There is no Lift within one Hour"/>
+        android:text="Sorry.. There is no Lift within one Hour"
+        tools:ignore="MissingConstraints" />
 
     <ListView
         android:id="@+id/listview"

@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#CCC6C6"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.CurrentlyActive">
 
 
@@ -14,7 +15,8 @@
         android:text="Currently Active is Empty"
         android:textSize="20dp"
         android:textAlignment="center"
-        android:visibility="invisible"/>
+        android:visibility="invisible"
+        android:gravity="center_horizontal" />
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv"
         android:layout_width="match_parent"

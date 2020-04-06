@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?android:windowBackground"
     tools:context=".ui.home.HomeFragment">
 
         <Button
@@ -22,7 +23,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/vehicle" />
+            app:layout_constraintTop_toBottomOf="@+id/vehicle"
+            tools:ignore="OnClick" />
 
         <AutoCompleteTextView
             android:id="@+id/vehicle"

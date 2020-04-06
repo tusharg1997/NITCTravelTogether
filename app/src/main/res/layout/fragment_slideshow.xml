@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?android:windowBackground"
     tools:context=".ui.slideshow.SlideshowFragment">
 
     <TextView
@@ -12,7 +13,8 @@
         android:layout_height="wrap_content"
         android:visibility="invisible"
         android:textSize="30dp"
-        android:text="Sorry.. There is no Request within one Hour"/>
+        android:text="Sorry.. There is no Request within one Hour"
+        tools:ignore="MissingConstraints" />
     <ListView
         android:id="@+id/requests"
         android:layout_width="384dp"

@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -25,6 +26,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.nitctraveltogether.Adapter;
+import com.example.nitctraveltogether.MainActivity;
 import com.example.nitctraveltogether.ModelClass;
 import com.example.nitctraveltogether.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -43,6 +45,7 @@ import java.util.List;
  * create an instance of this fragment.
  */
 public class CurrentlyActive extends Fragment {
+
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -244,9 +247,9 @@ public class CurrentlyActive extends Fragment {
                                         message.setVisibility(View.VISIBLE);
                                                     ReportAndRating nextFrag= new ReportAndRating(email+"@nitc.ac.in");
 
-                                                    AppCompatActivity activity = (AppCompatActivity) root.getContext();
+                                                   // AppCompatActivity activity = (AppCompatActivity) root.getContext();
 
-                                                    activity.getSupportFragmentManager().beginTransaction().replace(((ViewGroup)getView().getParent()).getId(), nextFrag).addToBackStack(null).commit();
+                                                    getActivity().getSupportFragmentManager().beginTransaction().remove(getParentFragment()).replace(((ViewGroup)getView().getParent()).getId(), nextFrag).addToBackStack(null).commit();
                                                 }})
                                             .setNegativeButton(android.R.string.no, null).show();
                                 }
