@@ -47,7 +47,7 @@
     <fragment
         android:id="@+id/reportandrating"
         android:name="com.example.nitctraveltogether.ui.ReportAndRating"
-        android:label="Report And Rating"
+        android:label="Search Profile"
         tools:layout="@layout/fragment_report_and_rating">
     </fragment>
     <fragment

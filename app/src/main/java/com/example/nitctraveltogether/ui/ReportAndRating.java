@@ -8,6 +8,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import android.text.style.ClickableSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +34,9 @@ import com.google.firebase.database.ValueEventListener;
  * create an instance of this fragment.
  */
 public class ReportAndRating extends Fragment {
+
+
+
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -50,15 +54,22 @@ public class ReportAndRating extends Fragment {
     EditText report;
     String currating;
     float rate,alreadyrated;
+    int searchflag=1;
     int count=-1,fc;
     String feedback,feedbackemail;
     int f;
     boolean flag;
     ProgressDialog pb;
+    int reportcount=0;
+    int ratecount=0;
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-
+    public ReportAndRating(String email)
+    {
+        profileemail=email;
+        searchflag=0;
+    }
     public ReportAndRating() {
         // Required empty public constructor
     }
@@ -111,6 +122,10 @@ public class ReportAndRating extends Fragment {
         report=root.findViewById(R.id.report);
         rating=root.findViewById(R.id.rating);
         bsearch=root.findViewById(R.id.search);
+        if(searchflag==0){
+        typedemail.setText(profileemail);
+        typedemail.setEnabled(false);
+        }
         bsearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -154,6 +169,12 @@ public class ReportAndRating extends Fragment {
         reportrate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(ratecount>0)
+                {
+                    Toast.makeText(getActivity(),"You cannot rate more than once",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                ratecount++;
                 rate=rating.getRating();
                 //Toast.makeText(getActivity(),String.valueOf(rate),Toast.LENGTH_SHORT).show();
                // feedback=report.getText().toString();
@@ -167,11 +188,19 @@ public class ReportAndRating extends Fragment {
         reportbutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(reportcount>0)
+                {
+                    Toast.makeText(getActivity(),"You cannot report more than once",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                reportcount++;
                 reporttext=report.getText().toString();
                 feedbackemail=typedemail.getText().toString().trim();
                 savereporttodatabase();
             }
         });
+        if(searchflag==0)
+        bsearch.performClick();
         return root;
 
     }
@@ -240,10 +269,13 @@ public class ReportAndRating extends Fragment {
         if(currating.length()>3)
             currating=currating.substring(0,3);
         age.setText(profileage+"         Rating: "+currating);
-        reportrate.setVisibility(View.VISIBLE);
-        report.setVisibility(View.VISIBLE);
         rating.setVisibility(View.VISIBLE);
-        reportbutton.setVisibility(View.VISIBLE);
+        if(searchflag==0) {
+            reportrate.setVisibility(View.VISIBLE);
+            report.setVisibility(View.VISIBLE);
+
+            reportbutton.setVisibility(View.VISIBLE);
+        }
     }
 
     public void savetodatabase()

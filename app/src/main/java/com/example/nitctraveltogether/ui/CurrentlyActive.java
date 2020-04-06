@@ -1,5 +1,6 @@
 package com.example.nitctraveltogether.ui;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -9,7 +10,10 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -217,6 +221,7 @@ public class CurrentlyActive extends Fragment {
 
                             }
 
+                            @SuppressLint("ResourceType")
                             @Override
                             public void onDeleteClick(int position) {
                                 try {
@@ -237,6 +242,11 @@ public class CurrentlyActive extends Fragment {
                                     adapter.notifyItemRemoved(position);
                                     if (modelClassList.size() == 0)
                                         message.setVisibility(View.VISIBLE);
+                                                    ReportAndRating nextFrag= new ReportAndRating(email+"@nitc.ac.in");
+
+                                                    AppCompatActivity activity = (AppCompatActivity) root.getContext();
+
+                                                    activity.getSupportFragmentManager().beginTransaction().replace(((ViewGroup)getView().getParent()).getId(), nextFrag).addToBackStack(null).commit();
                                                 }})
                                             .setNegativeButton(android.R.string.no, null).show();
                                 }
@@ -244,6 +254,7 @@ public class CurrentlyActive extends Fragment {
                                 {
                                     Toast.makeText(getActivity(), e.getMessage().toString(), Toast.LENGTH_SHORT).show();
                                 }
+
 
                             }
                         });
