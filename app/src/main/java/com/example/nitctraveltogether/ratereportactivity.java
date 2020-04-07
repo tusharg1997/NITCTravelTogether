@@ -1,25 +1,20 @@
-package com.example.nitctraveltogether.ui;
-
-import android.annotation.SuppressLint;
-import android.app.ProgressDialog;
-import android.content.Intent;
-import android.os.Bundle;
+package com.example.nitctraveltogether;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 
-import android.view.LayoutInflater;
+import android.app.ProgressDialog;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.os.Bundle;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RatingBar;
-import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.nitctraveltogether.R;
-import com.example.nitctraveltogether.userrating;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -27,16 +22,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link ReportAndRating#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class ReportAndRating extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+public class ratereportactivity extends AppCompatActivity {
+
     TextView name,email,gender,age;
     Button reportrate,bsearch,reportbutton;
     private FirebaseAuth mAuth;
@@ -55,62 +42,35 @@ public class ReportAndRating extends Fragment {
     int f;
     boolean flag;
     ProgressDialog pb;
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    public ReportAndRating() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment ReportAndRating.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static ReportAndRating newInstance(String param1, String param2) {
-        ReportAndRating fragment = new ReportAndRating();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
+    int ratecount=0;
+    int reportcount=0;
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+        setContentView(R.layout.activity_ratereportactivity);
+        ActionBar actionBar;
+        actionBar = getSupportActionBar();
 
-    }
+        ColorDrawable colorDrawable
+                = new ColorDrawable(Color.parseColor("#ff000000"));
+        actionBar.setBackgroundDrawable(colorDrawable);
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View root = inflater.inflate(R.layout.fragment_report_and_rating, container, false);
+        String intentemail = getIntent().getExtras().getString("email");
 
-        //SearchView searchprofile= getActivity().findViewById(R.id.search);
+        pb = new ProgressDialog(this);
+        name=findViewById(R.id.name);
+        gender=findViewById(R.id.gender);
+        age=findViewById(R.id.age);
+        typedemail=findViewById(R.id.editText2);
+        email=findViewById(R.id.email);
+        reportbutton=findViewById(R.id.reportuser);
+        reportrate=findViewById(R.id.ratereport);
 
-        pb = new ProgressDialog(getActivity());
-        name=root.findViewById(R.id.name);
-        gender=root.findViewById(R.id.gender);
-        age=root.findViewById(R.id.age);
-        typedemail=root.findViewById(R.id.editText2);
-        email=root.findViewById(R.id.email);
-        reportbutton=root.findViewById(R.id.reportuser);
-        reportrate=root.findViewById(R.id.ratereport);
-
-        report=root.findViewById(R.id.report);
-        rating=root.findViewById(R.id.rating);
-        bsearch=root.findViewById(R.id.search);
+        report=findViewById(R.id.report);
+        rating=findViewById(R.id.rating);
+        bsearch=findViewById(R.id.search);
+        typedemail.setText(intentemail);
+        typedemail.setEnabled(false);
         bsearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -123,12 +83,12 @@ public class ReportAndRating extends Fragment {
                 if(profileemail.isEmpty() )
                 {
                     pb.dismiss();
-                    Toast.makeText(getActivity(),"Please type some email to search",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ratereportactivity.this,"Please type some email to search",Toast.LENGTH_SHORT).show();
                     return;
                 }
                 if(profileemail.length()<=11){
                     pb.dismiss();
-                    Toast.makeText(getActivity(), "Please Enter valid Email", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ratereportactivity.this, "Please Enter valid Email", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 String fsearchemail=profileemail.substring(0,profileemail.length()-11);
@@ -154,9 +114,15 @@ public class ReportAndRating extends Fragment {
         reportrate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(ratecount>0)
+                {
+                    Toast.makeText(ratereportactivity.this,"You cannot rate more than once",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                ratecount++;
                 rate=rating.getRating();
                 //Toast.makeText(getActivity(),String.valueOf(rate),Toast.LENGTH_SHORT).show();
-               // feedback=report.getText().toString();
+                // feedback=report.getText().toString();
                 feedbackemail=typedemail.getText().toString().trim();
 
                 savetodatabase();
@@ -167,26 +133,30 @@ public class ReportAndRating extends Fragment {
         reportbutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(reportcount>0)
+                {
+                    Toast.makeText(ratereportactivity.this,"You cannot report more than once",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                reportcount++;
                 reporttext=report.getText().toString();
                 feedbackemail=typedemail.getText().toString().trim();
                 savereporttodatabase();
             }
         });
-        return root;
-
+        bsearch.performClick();
     }
-
     public void searchprofilefunction()
     {
 
-      flag = false;
+        flag = false;
         try{
             String fsearchemail=profileemail.substring(0,profileemail.length()-11);
             String ownemail=FirebaseAuth.getInstance().getCurrentUser().getEmail();
             String finalownemail=ownemail.substring(0,ownemail.length()-11);
             if(finalownemail.equalsIgnoreCase(fsearchemail))
             {
-                Toast.makeText(getActivity(),"Cannot rate or report your own Email",Toast.LENGTH_SHORT).show();
+                Toast.makeText(ratereportactivity.this,"Cannot rate or report your own Email",Toast.LENGTH_SHORT).show();
                 age.setText("Cannot rate or report your own Email");
                 pb.dismiss();
                 return;
@@ -205,16 +175,16 @@ public class ReportAndRating extends Fragment {
                             profilefname = data.getValue().toString();
                         if (data.getKey().toString().equalsIgnoreCase("lastname"))
                             profilelname = data.getValue().toString();
-                    flag = true;
+                        flag = true;
                     }
                     // now call a function
                     if(flag == false){
                         pb.dismiss();
-                        Toast.makeText(getActivity(),"Entered email not found",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ratereportactivity.this,"Entered email not found",Toast.LENGTH_SHORT).show();
                         return;
                     }
                     else
-                    setfields();
+                        setfields();
                 }
 
                 @Override
@@ -224,7 +194,7 @@ public class ReportAndRating extends Fragment {
             });
         } catch (Exception e) {
             pb.dismiss();
-            Toast.makeText(getActivity(),"Entered email not found",Toast.LENGTH_SHORT).show();
+            Toast.makeText(ratereportactivity.this,"Entered email not found",Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -240,11 +210,10 @@ public class ReportAndRating extends Fragment {
         if(currating.length()>3)
             currating=currating.substring(0,3);
         age.setText(profileage+"         Rating: "+currating);
+        reportrate.setVisibility(View.VISIBLE);
+        report.setVisibility(View.VISIBLE);
         rating.setVisibility(View.VISIBLE);
-//        reportrate.setVisibility(View.VISIBLE);
-//        report.setVisibility(View.VISIBLE);
-//
-//        reportbutton.setVisibility(View.VISIBLE);
+        reportbutton.setVisibility(View.VISIBLE);
     }
 
     public void savetodatabase()
@@ -275,7 +244,7 @@ public class ReportAndRating extends Fragment {
                 }
             });
         } catch (Exception e) {
-            Toast.makeText(getActivity(),"Email id not in database",Toast.LENGTH_SHORT).show();
+            Toast.makeText(ratereportactivity.this,"Email id not in database",Toast.LENGTH_SHORT).show();
         }
 
 
@@ -285,14 +254,14 @@ public class ReportAndRating extends Fragment {
         //String fsearchemail=feedbackemail.substring(0,feedbackemail.length()-11);
         count++;
         if(count>0)
-        rate=(((count-1)*alreadyrated)+rate)/(count);
+            rate=(((count-1)*alreadyrated)+rate)/(count);
         userrating userr=new userrating(rate,count);
         databaseuser2 = FirebaseDatabase.getInstance().getReference("rating");
         databaseuser2.child(fsearchemail).child("rate").setValue(rate);
         if(count==0)
             count=1;
         databaseuser2.child(fsearchemail).child("count").setValue(count);
-        Toast.makeText(getActivity(),"Rated successfully",Toast.LENGTH_SHORT).show();
+        Toast.makeText(ratereportactivity.this,"Rated successfully",Toast.LENGTH_SHORT).show();
 
     }
 
@@ -305,9 +274,10 @@ public class ReportAndRating extends Fragment {
 
             databaseuser1 = FirebaseDatabase.getInstance().getReference("report");
             databaseuser1.child(fsearchemail).child(fremail).setValue(reporttext);
-            Toast.makeText(getActivity(),"Reported",Toast.LENGTH_SHORT).show();
+            Toast.makeText(ratereportactivity.this,"Reported",Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
-            Toast.makeText(getActivity(),"Email id not in database",Toast.LENGTH_SHORT).show();
+            Toast.makeText(ratereportactivity.this,"Email id not in database",Toast.LENGTH_SHORT).show();
         }
     }
+
 }

@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -23,6 +24,7 @@ import android.widget.Toast;
 import com.example.nitctraveltogether.Adapter;
 import com.example.nitctraveltogether.ModelClass;
 import com.example.nitctraveltogether.R;
+import com.example.nitctraveltogether.ratereportactivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -237,6 +239,9 @@ public class CurrentlyActive extends Fragment {
                                     adapter.notifyItemRemoved(position);
                                     if (modelClassList.size() == 0)
                                         message.setVisibility(View.VISIBLE);
+                                    Intent i=new Intent(getActivity(), ratereportactivity.class);
+                                    i.putExtra("email",email+"@nitc.ac.in");
+                                    startActivity(i);
                                                 }})
                                             .setNegativeButton(android.R.string.no, null).show();
                                 }
