@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ratereportactivity">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/editText2"
+                    android:layout_width="200dp"
+                    android:layout_height="59dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginLeft="50dp"
+                    android:layout_marginTop="16dp"
+                    android:ems="10"
+                    android:hint="Search Profile"
+                    android:inputType="textPersonName" />
+
+                <Button
+                    android:id="@+id/search"
+                    style="@style/Widget.AppCompat.Button.Colored"
+                    android:layout_width="87dp"
+                    android:layout_height="47dp"
+                    android:layout_marginTop="24dp"
+                    android:background="#121111"
+                    android:layout_marginLeft="40dp"
+                    android:text="Search "
+                    />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/name"
+                android:layout_width="372dp"
+                android:layout_height="61dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="16dp"
+                android:textColor="#0B0A0A"
+                android:textSize="20dp" />
+
+            <TextView
+                android:id="@+id/email"
+                android:layout_width="372dp"
+                android:layout_height="65dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="5dp"
+                android:textColor="#070707"
+                android:textSize="20dp" />
+
+            <TextView
+                android:id="@+id/gender"
+                android:layout_width="375dp"
+                android:layout_height="66dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="16dp"
+                android:textColor="#0C0C0C"
+                android:textSize="20dp" />
+
+            <TextView
+                android:id="@+id/age"
+                android:layout_width="366dp"
+                android:layout_height="65dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="12dp"
+                android:textColor="#0E0E0E"
+                android:textSize="20dp" />
+
+            <RatingBar
+                android:id="@+id/rating"
+                style="@style/Widget.AppCompat.RatingBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="20dp"
+                android:numStars="5"
+                android:rating="5"
+                android:visibility="invisible" />
+
+            <Button
+                android:id="@+id/ratereport"
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:layout_width="154dp"
+                android:layout_height="49dp"
+                android:layout_gravity="center_horizontal"
+                android:background="#121111"
+                android:text="Rate "
+                android:textColor="#EFE6E6"
+                android:visibility="invisible" />
+
+
+            <EditText
+                android:id="@+id/report"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="32dp"
+                android:layout_marginRight="20dp"
+                android:ems="10"
+                android:gravity="start|top"
+                android:hint="Report an issue"
+                android:inputType="textMultiLine"
+                android:visibility="invisible" />
+
+            <Button
+                android:id="@+id/reportuser"
+                style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                android:layout_width="129dp"
+                android:layout_height="47dp"
+                android:background="#121111"
+                android:text="Report "
+                android:layout_marginBottom="30dp"
+                android:layout_gravity="center_horizontal"
+                android:textColor="#ECE1E1"
+                android:visibility="invisible"
+                />
+
+
+        </LinearLayout>
+    </ScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>

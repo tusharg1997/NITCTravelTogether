@@ -29,6 +29,7 @@ import com.example.nitctraveltogether.Adapter;
 import com.example.nitctraveltogether.MainActivity;
 import com.example.nitctraveltogether.ModelClass;
 import com.example.nitctraveltogether.R;
+import com.example.nitctraveltogether.ratereportactivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -245,11 +246,10 @@ public class CurrentlyActive extends Fragment {
                                     adapter.notifyItemRemoved(position);
                                     if (modelClassList.size() == 0)
                                         message.setVisibility(View.VISIBLE);
-                                                    ReportAndRating nextFrag= new ReportAndRating(email+"@nitc.ac.in");
+                       Intent i=new Intent(getActivity(), ratereportactivity.class);
+                                    i.putExtra("email",email+"@nitc.ac.in");
+                                    startActivity(i);
 
-                                                   // AppCompatActivity activity = (AppCompatActivity) root.getContext();
-
-                                                    getActivity().getSupportFragmentManager().beginTransaction().remove(getParentFragment()).replace(((ViewGroup)getView().getParent()).getId(), nextFrag).addToBackStack(null).commit();
                                                 }})
                                             .setNegativeButton(android.R.string.no, null).show();
                                 }
