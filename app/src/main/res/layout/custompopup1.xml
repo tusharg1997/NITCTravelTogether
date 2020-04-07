@@ -70,12 +70,14 @@
 
     <Button
         android:id="@+id/btnsendrequest"
-        android:layout_width="130dp"
-        android:layout_height="77dp"
+        style="@android:style/Widget.DeviceDefault.Button.Borderless.Colored"
+        android:layout_width="126dp"
+        android:layout_height="91dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="25dp"
         android:background="#000000"
         android:text="Send Request for lift"
-        android:textColor="@color/white" />
+        android:textColor="@color/white"
+        android:textSize="14dp" />
 
 </LinearLayout>

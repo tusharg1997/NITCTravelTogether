@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -64,6 +65,7 @@ public class SlideshowFragment extends Fragment {
     }
     int f=0;
     ProgressDialog pb;
+    ProgressDialog pb1;
     String rage="Age :";
     String rgender="Gender : ";
     String contact="";
@@ -82,6 +84,7 @@ public class SlideshowFragment extends Fragment {
     ListView list;
     String AcceptorEmail = "";
     String AcceptorContact="";
+    ArrayAdapter<String> arrayAdapter;
     //Sending Notification
 
     private void sendacceptnotification(String contactNo,String tokenemail)
@@ -100,6 +103,8 @@ public class SlideshowFragment extends Fragment {
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 try {
                     Toast.makeText(getActivity(),response.body().string(),Toast.LENGTH_SHORT).show();
+                    pb1.dismiss();
+                    mydialog.dismiss();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -125,7 +130,7 @@ public class SlideshowFragment extends Fragment {
         }
     }
 
-    private void sendrejectnotification()
+    private void sendrejectnotification(String tokenemail)
     {
         String title="Request rejected";
         String email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
@@ -141,6 +146,8 @@ public class SlideshowFragment extends Fragment {
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 try {
                     Toast.makeText(getActivity(),response.body().string(),Toast.LENGTH_SHORT).show();
+                    pb1.dismiss();
+                    mydialog.dismiss();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -151,6 +158,7 @@ public class SlideshowFragment extends Fragment {
 
             }
         });
+        FirebaseDatabase.getInstance().getReference("request").child(email.substring(0, email.length() - 11)).child(tokenemail).removeValue();
     }
 
     public void doRemainingWork(List<String> ls, int i){
@@ -206,6 +214,11 @@ public class SlideshowFragment extends Fragment {
         accept.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                pb1.setMessage("Do not press back button...\nSending Notification....");
+                pb1.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                pb1.setIndeterminate(true);
+                pb1.setProgress(0);
+                pb1.show();
 
                 databaseuser2 = FirebaseDatabase.getInstance().getReference("tokens");
                 databaseuser2.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -233,7 +246,11 @@ public class SlideshowFragment extends Fragment {
         reject.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                pb1.setMessage("Do not press back button...\nSending Notification....");
+                pb1.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                pb1.setIndeterminate(true);
+                pb1.setProgress(0);
+                pb1.show();
                 databaseuser1 = FirebaseDatabase.getInstance().getReference("tokens");
 
                 databaseuser1.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -246,7 +263,7 @@ public class SlideshowFragment extends Fragment {
                             if(key.equalsIgnoreCase(tokenemail))
                             { token = value;}
                         }
-                        sendrejectnotification();
+                        sendrejectnotification(tokenemail);
                     }
 
                     @Override
@@ -272,6 +289,7 @@ public class SlideshowFragment extends Fragment {
         databaseuser = FirebaseDatabase.getInstance().getReference("request").child(currentemail);
         mydialog = new Dialog(getActivity());
         pb = new ProgressDialog(getActivity());
+        pb1 = new ProgressDialog(getActivity());
         pb.setMessage("Loading .....");
         pb.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         pb.setIndeterminate(true);
@@ -307,7 +325,8 @@ public class SlideshowFragment extends Fragment {
                     }
                 }
 
-                ArrayAdapter<String> arrayAdapter = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, ls);
+               arrayAdapter = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, ls);
+
                 list.setAdapter(arrayAdapter);
                 pb.dismiss();
                 if(ls.size()==0) {

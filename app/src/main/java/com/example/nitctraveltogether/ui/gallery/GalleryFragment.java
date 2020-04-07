@@ -78,6 +78,7 @@ public class GalleryFragment extends Fragment {
     private GalleryViewModel galleryViewModel;
     ListView lv;
     ProgressDialog pb;
+    ProgressDialog pb1;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener firebaseAuthListener;
     DatabaseReference databaseuser;
@@ -132,6 +133,7 @@ public class GalleryFragment extends Fragment {
                 ViewModelProviders.of(this).get(GalleryViewModel.class);
         int x;
         pb = new ProgressDialog(getActivity());
+        pb1 = new ProgressDialog(getActivity());
         View root = inflater.inflate(R.layout.fragment_gallery, container, false);
         lv  = root.findViewById(R.id.listview);
         msg = root.findViewById(R.id.msg);
@@ -254,14 +256,18 @@ public class GalleryFragment extends Fragment {
                     @RequiresApi(api = Build.VERSION_CODES.O)
                     @Override
                     public void onClick(View v) {
-
+                        pb1.setMessage("Do not press back button...\nSending Notification....");
+                        pb1.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                        pb1.setIndeterminate(true);
+                        pb1.setProgress(0);
+                        pb1.show();
                         final String senderemail=FirebaseAuth.getInstance().getCurrentUser().getEmail();
                         SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
                         Date now = new Date();
                         String time = format.format(now);
                         String key = senderemail.substring(0,senderemail.length()-11);
                         databaseuser1.child(key).setValue(time);
-                        Toast.makeText(getActivity(),"Request sent",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(),"Request sending",Toast.LENGTH_SHORT).show();
                         databaseuser2 = FirebaseDatabase.getInstance().getReference("tokens");
 
                         databaseuser2.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -275,6 +281,7 @@ public class GalleryFragment extends Fragment {
                                     { token = value;}
                                 }
                                 sendnotification(senderemail);
+
                             }
 
                             @Override
@@ -285,6 +292,7 @@ public class GalleryFragment extends Fragment {
 
 //                        while(token==null){}
 //                        sendnotification();
+
                     }
                 });
             }
@@ -308,6 +316,8 @@ public class GalleryFragment extends Fragment {
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 try {
                     Toast.makeText(getActivity(),response.body().string(),Toast.LENGTH_SHORT).show();
+                    mydialog.dismiss();
+                    pb1.dismiss();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -318,5 +328,6 @@ public class GalleryFragment extends Fragment {
 
             }
         });
+
     }
 }
