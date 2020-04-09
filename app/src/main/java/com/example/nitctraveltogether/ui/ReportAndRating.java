@@ -213,13 +213,13 @@ public class ReportAndRating extends Fragment {
             String fsearchemail=profileemail.substring(0,profileemail.length()-11);
             String ownemail=FirebaseAuth.getInstance().getCurrentUser().getEmail();
             String finalownemail=ownemail.substring(0,ownemail.length()-11);
-            if(finalownemail.equalsIgnoreCase(fsearchemail))
-            {
-                Toast.makeText(getActivity(),"Cannot rate or report your own Email",Toast.LENGTH_SHORT).show();
-                age.setText("Cannot rate or report your own Email");
-                pb.dismiss();
-                return;
-            }
+//            if(finalownemail.equalsIgnoreCase(fsearchemail))
+//            {
+//                Toast.makeText(getActivity(),"Cannot rate or report your own Email",Toast.LENGTH_SHORT).show();
+//                age.setText("Cannot rate or report your own Email");
+//                pb.dismiss();
+//                return;
+//            }
             databaseuser = FirebaseDatabase.getInstance().getReference("User").child(fsearchemail);
 
             databaseuser.addListenerForSingleValueEvent(new ValueEventListener() {

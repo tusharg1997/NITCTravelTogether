@@ -46,9 +46,11 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -75,6 +77,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
     LocationListener locationListener;
     LocationRequest locationRequest;
     DatabaseReference databaseuser;
+    DatabaseReference databaseuser1;
+    String profileage,profilegender,profilefname,profilelname,finaldetails;
     GeoLocation geoLocation;
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -315,10 +319,46 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
                 // Toast.makeText(firstpage.this,String.valueOf(location.latitude)+" "+String.valueOf(location.longitude),Toast.LENGTH_LONG).show();
                 LatLng userLocation = new LatLng(location.latitude, location.longitude);
 
-                Marker muserMarker = mMap.addMarker(new MarkerOptions().position(userLocation).title(key).icon(BitmapDescriptorFactory.fromResource(R.mipmap.rsz_icon)));
-                muserMarker.setTag(key);
 
-                markers.add(muserMarker);
+                //---------------------------------------------------------------------
+                try{
+
+                    databaseuser1 = FirebaseDatabase.getInstance().getReference("User").child(key);
+
+                    databaseuser1.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            for (DataSnapshot data : dataSnapshot.getChildren()) {
+                                if (data.getKey().toString().equalsIgnoreCase("age"))
+                                    profileage = ("Age: " + data.getValue().toString());
+                                if (data.getKey().toString().equalsIgnoreCase("gender"))
+                                    profilegender = (data.getValue().toString());
+                                if (data.getKey().toString().equalsIgnoreCase("firstname"))
+                                    profilefname = data.getValue().toString();
+                                if (data.getKey().toString().equalsIgnoreCase("lastname"))
+                                    profilelname = data.getValue().toString();
+
+                            }
+                            profilelname=profilelname.substring(0, 1).toUpperCase() + profilelname.substring(1);
+                            profilefname=profilefname.substring(0, 1).toUpperCase() + profilefname.substring(1);
+                            profilegender=profilegender.substring(0, 1).toUpperCase() + profilegender.substring(1);
+                            finaldetails="Name:"+profilefname+" "+profilelname;
+                            finaldetails+=" Gender:"+profilegender+" ";
+                            finaldetails+=profileage;
+                            Marker muserMarker = mMap.addMarker(new MarkerOptions().position(userLocation).title(key).snippet(finaldetails).icon(BitmapDescriptorFactory.fromResource(R.mipmap.rsz_icon)));
+                            muserMarker.setTag(key);
+                            markers.add(muserMarker);
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+                } catch (Exception e) {
+                    Toast.makeText(getActivity(),"Entered email not found",Toast.LENGTH_SHORT).show();
+                }
+
             }
 
             @Override

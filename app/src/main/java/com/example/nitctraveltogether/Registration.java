@@ -34,7 +34,11 @@ public class Registration extends AppCompatActivity {
     DatabaseReference databaseuser1;
     public void sendtologin(View view){
         Intent i = new Intent(this, MainActivity.class);
-        FirebaseAuth.getInstance().signOut();
+        try {
+            FirebaseAuth.getInstance().signOut();
+        } catch (Exception e) {
+            Toast.makeText(Registration.this,"error in signout",Toast.LENGTH_SHORT).show();
+        }
         startActivity(i);
         finish();
     }
@@ -45,7 +49,7 @@ public class Registration extends AppCompatActivity {
         databaseuser.child(id).setValue(user);
         userrating userr=new userrating(0,-1);
         databaseuser1.child(id).setValue(userr);
-        Toast.makeText(this, "Registered Successfully, please go to your email and verify your email id.", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Registered Successfully, please go to your email and verify your email id.", Toast.LENGTH_LONG).show();
 
     }
 

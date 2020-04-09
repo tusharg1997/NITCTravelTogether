@@ -84,6 +84,7 @@ public class ShareFareNeedLift extends Fragment {
     private GalleryViewModel galleryViewModel;
     ListView lv;
     ProgressDialog pb;
+    ProgressDialog pb1;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener firebaseAuthListener;
     DatabaseReference databaseuser;
@@ -120,9 +121,9 @@ public class ShareFareNeedLift extends Fragment {
 
     private void sendnotification(String sender)
     {
-        String title="Request for lift from "+sender;
+        String title="Request for Share Fare from "+sender;
         String body="I want to travel with you";
-        Toast.makeText(getActivity(), "Inside send notification, token:"+token, Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), "Inside send notification, token:"+token, Toast.LENGTH_SHORT);
         //Hosting Url-https://nitctraveltogether-a535a.firebaseapp.com
         Retrofit retrofit = new Retrofit.Builder().baseUrl("https://nitctraveltogether-a535a.firebaseapp.com/api/").addConverterFactory(GsonConverterFactory.create()).build();
 
@@ -132,7 +133,9 @@ public class ShareFareNeedLift extends Fragment {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 try {
-                    Toast.makeText(getActivity(),response.body().string(),Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(),response.body().string(),Toast.LENGTH_SHORT);
+                    Toast.makeText(getActivity(),"Request Sent Successfully",Toast.LENGTH_SHORT).show();
+                    pb1.dismiss();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -181,10 +184,13 @@ public class ShareFareNeedLift extends Fragment {
         email.setText("Email: " + list.get(i).email);
         final String receiveremail = list.get(i).email.substring(0, list.get(i).email.length() - 11);
         databaseuser1 = FirebaseDatabase.getInstance().getReference("request").child(receiveremail);
-        name.setText("Name : " + getName(list.get(i).email));
+        String finalname=getName(list.get(i).email);
+        finalname=finalname.substring(0, 1).toUpperCase() + finalname.substring(1);
+        name.setText("Name: " + finalname);
         destination.setText("Destination: " + list.get(i).destination);
         txtclose.setText("X");
         age.setText(rage);
+        rgender=rgender.substring(0, 1).toUpperCase() + rgender.substring(1);
         gender.setText(rgender);
         btnFollow = (Button) mydialog.findViewById(R.id.btnsendrequest);
         txtclose.setOnClickListener(new View.OnClickListener() {
@@ -204,7 +210,11 @@ public class ShareFareNeedLift extends Fragment {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
-
+                pb1.setMessage("Do not press back button...\nSending Notification....");
+                pb1.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                pb1.setIndeterminate(true);
+                pb1.setProgress(0);
+                pb1.show();
                 final String senderemail = FirebaseAuth.getInstance().getCurrentUser().getEmail();
 
                 // second listener start
@@ -214,7 +224,7 @@ public class ShareFareNeedLift extends Fragment {
                 String time = format.format(now);
                 String key = senderemail.substring(0,senderemail.length()-11);
                 databaseuser1.child(key).setValue(time);
-                Toast.makeText(getActivity(),"Request sent",Toast.LENGTH_SHORT).show();
+
                 databaseuser2 = FirebaseDatabase.getInstance().getReference("tokens");
 
                 databaseuser2.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -248,6 +258,7 @@ public class ShareFareNeedLift extends Fragment {
         mydialog = new Dialog(getActivity());
         int x;
         pb = new ProgressDialog(getActivity());
+        pb1 = new ProgressDialog(getActivity());
         lv  = root.findViewById(R.id.listview);
         msg = root.findViewById(R.id.msg);
         pref=getActivity().getSharedPreferences("user",MODE_PRIVATE);
@@ -325,7 +336,7 @@ public class ShareFareNeedLift extends Fragment {
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         for (DataSnapshot data : dataSnapshot.getChildren()) {
                             if (data.getKey().toString().equalsIgnoreCase("age"))
-                                rage = ("Age : " + data.getValue().toString());
+                                rage = ("Age: " + data.getValue().toString());
                             if (data.getKey().toString().equalsIgnoreCase("gender"))
                                 rgender = ("Gender: " + data.getValue().toString());
                         }
