@@ -112,7 +112,7 @@ public class SlideshowFragment extends Fragment {
                     Toast.makeText(getActivity(),response.body().string(),Toast.LENGTH_SHORT);
                     pb1.dismiss();
                     Toast.makeText(getActivity(),"Accept Notification sent successfully",Toast.LENGTH_SHORT).show();
-                   // mydialog.dismiss();
+                    mydialog.dismiss();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -226,11 +226,11 @@ public class SlideshowFragment extends Fragment {
         accept.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                pb.setMessage("Wait your request is Accepting .....");
-                pb.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-                pb.setIndeterminate(true);
-                pb.setProgress(0);
-                pb.show();
+                pb1.setMessage("Accepting the request.....\nDo not press back button");
+                pb1.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                pb1.setIndeterminate(true);
+                pb1.setProgress(0);
+                pb1.show();
                 AdapterIncomingRequest adapter = new AdapterIncomingRequest(modelClassList);
                 recyclerView.setAdapter(adapter);
                 recyclerView.setHasFixedSize(true);
@@ -238,7 +238,7 @@ public class SlideshowFragment extends Fragment {
                 if(modelClassList.size()==0)
                     msg.setVisibility(View.VISIBLE);
                 adapter.notifyItemRemoved(i);
-                pb.dismiss();
+               // pb.dismiss();
                 databaseuser2 = FirebaseDatabase.getInstance().getReference("tokens");
                 databaseuser2.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -251,7 +251,7 @@ public class SlideshowFragment extends Fragment {
                             { token = value;}
                         }
                        // contactt.setText("Contact " + rphone);
-                        Toast.makeText(getActivity(), "Go to Currently Active to see Requester Details", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "Go to Current Active to see Requester Details and contact number", Toast.LENGTH_LONG).show();
                         sendacceptnotification(AcceptorContact,tokenemail);
 
                     }
@@ -267,11 +267,11 @@ public class SlideshowFragment extends Fragment {
         reject.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                pb.setMessage("Wait your request is Rejecting .....");
-                pb.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-                pb.setIndeterminate(true);
-                pb.setProgress(0);
-                pb.show();
+                pb1.setMessage("Rejecting the request.....\nDo not press back button");
+                pb1.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                pb1.setIndeterminate(true);
+                pb1.setProgress(0);
+                pb1.show();
                 AdapterIncomingRequest adapter = new AdapterIncomingRequest(modelClassList);
                 recyclerView.setAdapter(adapter);
                 recyclerView.setHasFixedSize(true);
@@ -279,7 +279,7 @@ public class SlideshowFragment extends Fragment {
                 if(modelClassList.size()==0)
                     msg.setVisibility(View.VISIBLE);
                 adapter.notifyItemRemoved(i);
-                pb.dismiss();
+               // pb.dismiss();
                 databaseuser1 = FirebaseDatabase.getInstance().getReference("tokens");
                 databaseuser1.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override

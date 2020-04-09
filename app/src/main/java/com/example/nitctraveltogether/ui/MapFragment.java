@@ -384,7 +384,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
                         }
                     }
                 } catch (Exception e) {
-                    Toast.makeText(getActivity(),"Not able to refresh map, you can reload map",Toast.LENGTH_SHORT).show();
+                    try {
+                        Toast.makeText(getActivity(), "Not able to refresh map, you can reload map", Toast.LENGTH_SHORT).show();
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
                 }
             }
 

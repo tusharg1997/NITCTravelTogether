@@ -72,15 +72,15 @@
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="20dp"
         android:orientation="horizontal">
 
         <Button
             android:id="@+id/accept"
             android:layout_width="100dp"
             android:layout_height="50dp"
-            android:layout_marginLeft="40dp"
             android:layout_gravity="center_horizontal"
+            android:layout_marginLeft="40dp"
             android:layout_marginTop="10dp"
 
             android:background="#878787"
