@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.ColorSpace;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
@@ -23,8 +24,12 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.nitctraveltogether.AdapterIncomingRequest;
 import com.example.nitctraveltogether.Api;
+import com.example.nitctraveltogether.ModelClassIncomingRequest;
 import com.example.nitctraveltogether.Offer;
 import com.example.nitctraveltogether.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -65,10 +70,8 @@ public class SlideshowFragment extends Fragment {
     }
     int f=0;
     ProgressDialog pb;
+    private RecyclerView recyclerView;
     ProgressDialog pb1;
-    String rage="Age :";
-    String rgender="Gender : ";
-    String contact="";
     String token=null;
     TextView msg;
     Dialog mydialog;
@@ -81,6 +84,7 @@ public class SlideshowFragment extends Fragment {
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener firebaseAuthListener;
     private SlideshowViewModel slideshowViewModel;
+    ArrayList<ModelClassIncomingRequest>  modelClassList;
     ListView list;
     String AcceptorEmail = "";
     String AcceptorContact="";
@@ -92,7 +96,7 @@ public class SlideshowFragment extends Fragment {
         String email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
         String title="Request accepted";
         String body="Your request has been accepted From: " + email+ "\n The Acceptor Contact Number is " + contactNo;
-        Toast.makeText(getActivity(), "Inside send notification, token:"+token, Toast.LENGTH_SHORT).show();
+       // Toast.makeText(getActivity(), "Inside send notification, token:"+token, Toast.LENGTH_SHORT).show();
         //Hosting Url-https://nitctraveltogether-a535a.firebaseapp.com
         Retrofit retrofit = new Retrofit.Builder().baseUrl("https://nitctraveltogether-a535a.firebaseapp.com/api/").addConverterFactory(GsonConverterFactory.create()).build();
 
@@ -102,6 +106,8 @@ public class SlideshowFragment extends Fragment {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 try {
+
+
                     Toast.makeText(getActivity(),response.body().string(),Toast.LENGTH_SHORT).show();
                     pb1.dismiss();
                     mydialog.dismiss();
@@ -120,8 +126,8 @@ public class SlideshowFragment extends Fragment {
         try {
 
 
-                databaseuseracceptor = FirebaseDatabase.getInstance().getReference("currentactive").child(email.substring(0, email.length() - 11));
-                databaseuseracceptor.child(tokenemail).setValue(tokenemail+"@nitc.ac.in");
+            databaseuseracceptor = FirebaseDatabase.getInstance().getReference("currentactive").child(email.substring(0, email.length() - 11));
+            databaseuseracceptor.child(tokenemail).setValue(tokenemail+"@nitc.ac.in");
             FirebaseDatabase.getInstance().getReference("request").child(email.substring(0, email.length() - 11)).child(tokenemail).removeValue();
             databaseuserremove = FirebaseDatabase.getInstance().getReference("currentactive").child(tokenemail);
             databaseuserremove.child(email.substring(0, email.length() - 11)).setValue(email);
@@ -135,7 +141,7 @@ public class SlideshowFragment extends Fragment {
         String title="Request rejected";
         String email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
         String body="Your request has been rejected from " + email;
-        Toast.makeText(getActivity(), "Inside send notification, token:"+token, Toast.LENGTH_SHORT).show();
+       // Toast.makeText(getActivity(), "Inside send notification, token:"+token, Toast.LENGTH_SHORT).show();
         //Hosting Url-https://nitctraveltogether-a535a.firebaseapp.com
         Retrofit retrofit = new Retrofit.Builder().baseUrl("https://nitctraveltogether-a535a.firebaseapp.com/api/").addConverterFactory(GsonConverterFactory.create()).build();
 
@@ -161,8 +167,10 @@ public class SlideshowFragment extends Fragment {
         FirebaseDatabase.getInstance().getReference("request").child(email.substring(0, email.length() - 11)).child(tokenemail).removeValue();
     }
 
-    public void doRemainingWork(List<String> ls, int i){
+    public void doRemainingWork( int i,String rage, String remail, String rfirstname, String rgender, String rlastname, String rphone){
         TextView txtclose;
+        //Toast.makeText(getActivity(), "clicked + " + rage+" " + remail, Toast.LENGTH_SHORT).show();
+
         final Button btnFollow,accept,reject;
         TextView name, email,age,gender,contactt;
         mydialog.setContentView(R.layout.popuprequest);
@@ -171,20 +179,20 @@ public class SlideshowFragment extends Fragment {
         email =(TextView) mydialog.findViewById(R.id.email);
         age = (TextView) mydialog.findViewById(R.id.age);
         gender = (TextView) mydialog.findViewById(R.id.gender);
-        contactt = (TextView) mydialog.findViewById(R.id.number);
+        //contactt = (TextView) mydialog.findViewById(R.id.number);
         age.setText(rage);
         gender.setText(rgender);
-        email.setText("Email: "+ ls.get(i)+"@nitc.ac.in");
+        email.setText("Email: "+ remail);
         txtclose.setText("X");
-        name.setText("Name : "+ getName(ls.get(i)));
+        name.setText("Name : "+ rfirstname+rlastname);
         txtclose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mydialog.dismiss();
             }
         });
-        String temail=ls.get(i)+"@nitc.ac.in";
-        String tokenemail=temail.substring(0,temail.length()-11);
+        String temail=modelClassList.get(i).getEmail();
+        String tokenemail=temail.substring(7,temail.length()-11);
         accept=mydialog.findViewById(R.id.accept);
         reject=mydialog.findViewById(R.id.reject);
 
@@ -214,12 +222,19 @@ public class SlideshowFragment extends Fragment {
         accept.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                pb1.setMessage("Do not press back button...\nSending Notification....");
-                pb1.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-                pb1.setIndeterminate(true);
-                pb1.setProgress(0);
-                pb1.show();
-
+                pb.setMessage("Wait your request is Accepting .....");
+                pb.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                pb.setIndeterminate(true);
+                pb.setProgress(0);
+                pb.show();
+                AdapterIncomingRequest adapter = new AdapterIncomingRequest(modelClassList);
+                recyclerView.setAdapter(adapter);
+                recyclerView.setHasFixedSize(true);
+                modelClassList.remove(i);
+                if(modelClassList.size()==0)
+                    msg.setVisibility(View.VISIBLE);
+                adapter.notifyItemRemoved(i);
+                pb.dismiss();
                 databaseuser2 = FirebaseDatabase.getInstance().getReference("tokens");
                 databaseuser2.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -231,8 +246,10 @@ public class SlideshowFragment extends Fragment {
                             if(key.equalsIgnoreCase(tokenemail))
                             { token = value;}
                         }
-                        contactt.setText("Contact " + contact);
+                       // contactt.setText("Contact " + rphone);
+                        Toast.makeText(getActivity(), "Go to Currently Active to see Requester Details", Toast.LENGTH_SHORT).show();
                         sendacceptnotification(AcceptorContact,tokenemail);
+
                     }
 
                     @Override
@@ -246,13 +263,20 @@ public class SlideshowFragment extends Fragment {
         reject.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                pb1.setMessage("Do not press back button...\nSending Notification....");
-                pb1.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-                pb1.setIndeterminate(true);
-                pb1.setProgress(0);
-                pb1.show();
+                pb.setMessage("Wait your request is Rejecting .....");
+                pb.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                pb.setIndeterminate(true);
+                pb.setProgress(0);
+                pb.show();
+                AdapterIncomingRequest adapter = new AdapterIncomingRequest(modelClassList);
+                recyclerView.setAdapter(adapter);
+                recyclerView.setHasFixedSize(true);
+                modelClassList.remove(i);
+                if(modelClassList.size()==0)
+                    msg.setVisibility(View.VISIBLE);
+                adapter.notifyItemRemoved(i);
+                pb.dismiss();
                 databaseuser1 = FirebaseDatabase.getInstance().getReference("tokens");
-
                 databaseuser1.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -265,7 +289,6 @@ public class SlideshowFragment extends Fragment {
                         }
                         sendrejectnotification(tokenemail);
                     }
-
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
 
@@ -282,12 +305,15 @@ public class SlideshowFragment extends Fragment {
         slideshowViewModel =
                 ViewModelProviders.of(this).get(SlideshowViewModel.class);
         View root = inflater.inflate(R.layout.fragment_slideshow, container, false);
-        list=root.findViewById(R.id.requests);
+        recyclerView=(RecyclerView) root.findViewById(R.id.requests);
         msg = root.findViewById(R.id.msg);
         String currentemail = FirebaseAuth.getInstance().getCurrentUser().getEmail();
         currentemail = currentemail.substring(0,currentemail.length()-11);
         databaseuser = FirebaseDatabase.getInstance().getReference("request").child(currentemail);
         mydialog = new Dialog(getActivity());
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        recyclerView.setLayoutManager(layoutManager);
         pb = new ProgressDialog(getActivity());
         pb1 = new ProgressDialog(getActivity());
         pb.setMessage("Loading .....");
@@ -295,48 +321,97 @@ public class SlideshowFragment extends Fragment {
         pb.setIndeterminate(true);
         pb.setProgress(0);
         pb.show();
-        //
-        final List<String> ls = new ArrayList<>();
-        final List<String> lsemail = new ArrayList<>();
+        modelClassList = new ArrayList<>();
+      
+
         final String finalCurrentemail = currentemail;
         databaseuser.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                for(DataSnapshot ds : dataSnapshot.getChildren()) {
-                    try {
-
-                        String email = ds.getKey().toString();
-                        String time = ds.getValue().toString();
-                        SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-                        Date d1 = format.parse(time);
-                        Date now = new Date();
-                        long duration = now.getTime() - d1.getTime();
-                        long diffInHours = TimeUnit.MILLISECONDS.toHours(duration);
-                        if (diffInHours >= 1)
-                            continue;
-                        String times[] = time.split(" ", 2);
-                        lsemail.add(email);
-                        ls.add(email + "@nitc.ac.in" + "  " + times[1]);
-                    }
-                    catch (Exception e)
-                    {
-                        Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                }
-
-               arrayAdapter = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, ls);
-
-                list.setAdapter(arrayAdapter);
-                pb.dismiss();
-                if(ls.size()==0) {
+                if(!dataSnapshot.exists())
+                {
+                    pb.dismiss();
                     msg.setVisibility(View.VISIBLE);
-                    //Toast.makeText(getActivity(), "No Request Within One Hour", Toast.LENGTH_LONG).show();
                 }
-                else{
-                    msg.setVisibility(View.INVISIBLE);
-                }
+               else if (dataSnapshot.exists()) {
+                    pb.dismiss();
+                    if ((int) dataSnapshot.getChildrenCount() == 0) {
+                        pb.dismiss();
+                        AdapterIncomingRequest adapter = new AdapterIncomingRequest(modelClassList);
+                        recyclerView.setAdapter(adapter);
+                        recyclerView.setHasFixedSize(true);
+                        adapter.notifyDataSetChanged();
+                        msg.setVisibility(View.VISIBLE);
+                    } else {
+                        for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                            try {
+                                String email = ds.getKey();
+                                String time = ds.getValue().toString();
+                                SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+                                Date d1 = format.parse(time);
+                                Date now = new Date();
+                                long duration = now.getTime() - d1.getTime();
+                                long diffInHours = TimeUnit.MILLISECONDS.toHours(duration);
+                                if (diffInHours >= 1)
+                                    continue;
+                               // Toast.makeText(getActivity(), ds.getKey(), Toast.LENGTH_SHORT).show();
+                                String times[] = time.split(" ", 2);
+                                modelClassList.add(new ModelClassIncomingRequest("Email: " + email + "@nitc.ac.in", "Time: " + times[1]));
 
+                            } catch (Exception e) {
+                                Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                        AdapterIncomingRequest adapter = new AdapterIncomingRequest(modelClassList);
+                        recyclerView.setAdapter(adapter);
+                        recyclerView.setHasFixedSize(true);
+                        adapter.notifyDataSetChanged();
+                        msg.setVisibility(View.INVISIBLE);
+                        pb.dismiss();
+                        adapter.setOnItemClickListener(new AdapterIncomingRequest.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(int position) {
+                                pb.setMessage("Loading .....");
+                                pb.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                                pb.setIndeterminate(true);
+                                pb.setProgress(0);
+                                pb.show();
+                                String email = modelClassList.get(position).getEmail();
+                                email = email.substring(7, email.length() - 11);
+                                DatabaseReference userdata = FirebaseDatabase.getInstance().getReference("User").
+                                        child(email);
+                                userdata.addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                        String age = "", email = "", firstname = "", gender = "", lastname = "", phone = "";
+                                        for (DataSnapshot data : dataSnapshot.getChildren()) {
+                                            if (data.getKey().toString().equalsIgnoreCase("age"))
+                                                age = ("Age : " + data.getValue().toString());
+                                            if (data.getKey().toString().equalsIgnoreCase("gender"))
+                                                gender = ("Gender: " + data.getValue().toString());
+                                            if (data.getKey().toString().equalsIgnoreCase("firstName"))
+                                                firstname = (data.getValue().toString());
+                                            if (data.getKey().toString().equalsIgnoreCase("lastName"))
+                                                lastname = (data.getValue().toString());
+                                            if (data.getKey().toString().equalsIgnoreCase("phone"))
+                                                phone = (data.getValue().toString());
+                                            if (data.getKey().toString().equalsIgnoreCase("email_id"))
+                                                email = (data.getValue().toString());
+                                        }
+                                        // now call a function
+                                        doRemainingWork( position, age, email, firstname, gender, lastname, phone);
+
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                    }
+                                });
+                            }
+                        });
+                    }
+                }
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
@@ -344,43 +419,6 @@ public class SlideshowFragment extends Fragment {
             }
         });
 
-        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, final int i, long l) {
-                pb.setMessage("Loading .....");
-                pb.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-                pb.setIndeterminate(true);
-                pb.setProgress(0);
-                pb.show();
-
-                DatabaseReference userdata = FirebaseDatabase.getInstance().getReference("User").
-                        child(lsemail.get(i));
-                userdata.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        for (DataSnapshot data:dataSnapshot.getChildren())
-                        {
-                            if(data.getKey().toString().equalsIgnoreCase("age"))
-                                rage = ("Age : " + data.getValue().toString());
-                            if(data.getKey().toString().equalsIgnoreCase("gender"))
-                                rgender = ("Gender: "+ data.getValue().toString());
-                            if(data.getKey().toString().equalsIgnoreCase("phone"))
-                                contact = data.getValue().toString();
-                        }
-                        // now call a function
-                        doRemainingWork(lsemail,i);
-
-                    }
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                });
-
-                }
-                // on item click close
-                });
         return root;
     }
 }
