@@ -11,9 +11,9 @@
         android:id="@+id/msg"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="invisible"
+        android:text="Sorry.. There is no Request within one Hour or you have entered wrong destination"
         android:textSize="30dp"
-        android:text="Sorry.. There is no Request within one Hour"
+        android:visibility="invisible"
         tools:ignore="MissingConstraints" />
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/requests"

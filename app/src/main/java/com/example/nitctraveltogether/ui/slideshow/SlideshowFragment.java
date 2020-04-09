@@ -95,8 +95,10 @@ public class SlideshowFragment extends Fragment {
     {
         String email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
         String title="Request accepted";
-        String body="Your request has been accepted From: " + email+ "\n The Acceptor Contact Number is " + contactNo;
-       // Toast.makeText(getActivity(), "Inside send notification, token:"+token, Toast.LENGTH_SHORT).show();
+
+        String body="Your request to travel\nhas been accepted From: " + email+ "\n The Acceptor Contact Number is " + contactNo;
+       // Toast.makeText(getActivity(), "Inside send notification, token:"+token, Toast.LENGTH_SHORT);
+
         //Hosting Url-https://nitctraveltogether-a535a.firebaseapp.com
         Retrofit retrofit = new Retrofit.Builder().baseUrl("https://nitctraveltogether-a535a.firebaseapp.com/api/").addConverterFactory(GsonConverterFactory.create()).build();
 
@@ -107,10 +109,10 @@ public class SlideshowFragment extends Fragment {
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 try {
 
-
-                    Toast.makeText(getActivity(),response.body().string(),Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(),response.body().string(),Toast.LENGTH_SHORT);
                     pb1.dismiss();
-                    mydialog.dismiss();
+                    Toast.makeText(getActivity(),"Accept Notification sent successfully",Toast.LENGTH_SHORT).show();
+                   // mydialog.dismiss();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -140,8 +142,9 @@ public class SlideshowFragment extends Fragment {
     {
         String title="Request rejected";
         String email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
-        String body="Your request has been rejected from " + email;
-       // Toast.makeText(getActivity(), "Inside send notification, token:"+token, Toast.LENGTH_SHORT).show();
+
+        String body="Your request to travel has been rejected from\n" + email;
+      //  Toast.makeText(getActivity(), "Inside send notification, token:"+token, Toast.LENGTH_SHORT);
         //Hosting Url-https://nitctraveltogether-a535a.firebaseapp.com
         Retrofit retrofit = new Retrofit.Builder().baseUrl("https://nitctraveltogether-a535a.firebaseapp.com/api/").addConverterFactory(GsonConverterFactory.create()).build();
 
@@ -151,7 +154,8 @@ public class SlideshowFragment extends Fragment {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 try {
-                    Toast.makeText(getActivity(),response.body().string(),Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(),response.body().string(),Toast.LENGTH_SHORT);
+                    Toast.makeText(getActivity(),"Reject Notification sent successfully",Toast.LENGTH_SHORT).show();
                     pb1.dismiss();
                     mydialog.dismiss();
                 } catch (IOException e) {

@@ -100,43 +100,47 @@ public class  MainActivity extends AppCompatActivity implements  View.OnKeyListe
         pb.setIndeterminate(true);
         pb.setProgress(0);
         pb.show();
-        mAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            if(mAuth.getCurrentUser().isEmailVerified()){
-                                Toast.makeText(MainActivity.this, "Authentication Success.",
-                                        Toast.LENGTH_SHORT).show();
-                                FirebaseUser user = mAuth.getCurrentUser();
-                                String email= FirebaseAuth.getInstance().getCurrentUser().getEmail();
-                                String emailid=email.substring(0,email.length()-11);
-                                //progressDialog.dismiss();
+        try {
+            mAuth.signInWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                if (mAuth.getCurrentUser().isEmailVerified()) {
+                                    Toast.makeText(MainActivity.this, "Authentication Success.",
+                                            Toast.LENGTH_SHORT).show();
+                                    FirebaseUser user = mAuth.getCurrentUser();
+                                    String email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
+                                    String emailid = email.substring(0, email.length() - 11);
+                                    //progressDialog.dismiss();
                                     pb.dismiss();
                                     Intent i = new Intent(MainActivity.this, Drawer.class);
                                     startActivity(i);
                                     finish();
 
 
+                                } else {
+                                    pb.dismiss();
+                                    Toast.makeText(MainActivity.this, "Please verify your email.",
+                                            Toast.LENGTH_SHORT).show();
+                                }
 
-                            }
-                            else{
+                            } else {
                                 pb.dismiss();
-                                Toast.makeText(MainActivity.this, "Please verify your email.",
+                                // If sign in fails, display a message to the user.
+                                //Log.w(TAG, "signInWithEmail:failure", task.getException());
+                                Toast.makeText(MainActivity.this, "Wrong Username or Password.",
                                         Toast.LENGTH_SHORT).show();
-                            }
 
-                        } else {
-                            pb.dismiss();
-                            // If sign in fails, display a message to the user.
-                            //Log.w(TAG, "signInWithEmail:failure", task.getException());
-                            Toast.makeText(MainActivity.this, "Wrong Username or Password.",
-                                    Toast.LENGTH_SHORT).show();
+                            }
 
                         }
+                    });
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(MainActivity.this,"error in sign in",Toast.LENGTH_SHORT).show();
+        }
 
-                    }
-                });
     }
 
 

@@ -106,18 +106,20 @@ public class GalleryFragment extends Fragment {
 
     public void doremaining(List<Offer> list, int i){
         age.setText(rage);
+        rgender=rgender.substring(0, 1).toUpperCase() + rgender.substring(1);
         gender.setText(rgender);
         aseats =(TextView) mydialog.findViewById(R.id.availableseats);
         destination =(TextView) mydialog.findViewById(R.id.destination);
         tov =(TextView) mydialog.findViewById(R.id.typeofvehicle);
         email.setText("Email: "+ list.get(i).email);
-        aseats.setText("No. of Seats "+ list.get(i).availableSeats);
+        aseats.setText("No. of Seats: "+ list.get(i).availableSeats);
         final String receiveremail=list.get(i).email.substring(0,list.get(i).email.length()-11);
         databaseuser1 = FirebaseDatabase.getInstance().getReference("request").child(receiveremail);
-        tov.setText("Type of Vehicle "+ list.get(i).vehicleType);
-
-        name.setText("Name : "+ getName(list.get(i).email));
-        destination.setText("Destination "+ list.get(i).destination);
+        tov.setText("Type of Vehicle: "+ list.get(i).vehicleType);
+        String finalname=getName(list.get(i).email);
+        finalname=finalname.substring(0, 1).toUpperCase() + finalname.substring(1);
+        name.setText("Name: "+ finalname);
+        destination.setText("Destination: "+ list.get(i).destination);
         pb.dismiss();
         mydialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         mydialog.show();
@@ -227,7 +229,7 @@ public class GalleryFragment extends Fragment {
                         for (DataSnapshot data:dataSnapshot.getChildren())
                         {
                             if(data.getKey().toString().equalsIgnoreCase("age"))
-                                rage = ("Age : " + data.getValue().toString());
+                                rage = ("Age: " + data.getValue().toString());
                             if(data.getKey().toString().equalsIgnoreCase("gender"))
                             rgender = ("Gender: "+ data.getValue().toString());
                         }
@@ -305,7 +307,7 @@ public class GalleryFragment extends Fragment {
     {
         String title="Request for lift from "+sender;
         String body="I want to travel with you";
-        Toast.makeText(getActivity(), "Inside send notification, token:"+token, Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), "Inside send notification, token:"+token, Toast.LENGTH_SHORT);
         //Hosting Url-https://nitctraveltogether-a535a.firebaseapp.com
         Retrofit retrofit = new Retrofit.Builder().baseUrl("https://nitctraveltogether-a535a.firebaseapp.com/api/").addConverterFactory(GsonConverterFactory.create()).build();
 
@@ -315,9 +317,10 @@ public class GalleryFragment extends Fragment {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 try {
-                    Toast.makeText(getActivity(),response.body().string(),Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(),response.body().string(),Toast.LENGTH_SHORT);
                     mydialog.dismiss();
                     pb1.dismiss();
+                    Toast.makeText(getActivity(),"Notification sent successfully",Toast.LENGTH_SHORT).show();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
