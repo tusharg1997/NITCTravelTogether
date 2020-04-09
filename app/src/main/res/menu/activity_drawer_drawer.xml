@@ -23,7 +23,7 @@
                     android:icon="@drawable/currentactive"
                     android:title="Current Active"/>
 
-        <itemu
+        <item
             android:id="@+id/map"
             android:icon="@mipmap/rsz_icon"
             android:title="@string/map" />
