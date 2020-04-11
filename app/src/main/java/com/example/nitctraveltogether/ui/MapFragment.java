@@ -78,7 +78,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, Locatio
     LocationRequest locationRequest;
     DatabaseReference databaseuser;
     DatabaseReference databaseuser1;
-    String profileage,profilegender,profilefname,profilelname,finaldetails;
+    String profileage="null",profilegender="null",profilefname="null",profilelname="null",finaldetails;
     GeoLocation geoLocation;
     // TODO: Rename and change types of parameters
     private String mParam1;

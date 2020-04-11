@@ -85,10 +85,10 @@
 
     <Button
         android:id="@+id/btnsendrequest"
-        android:layout_width="173dp"
-        android:layout_height="61dp"
+        android:layout_width="146dp"
+        android:layout_height="87dp"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="7dp"
         android:background="#000000"
         android:text="Send Request for lift"
         android:textColor="@color/white" />

@@ -71,6 +71,11 @@
         android:name="com.example.nitctraveltogether.ui.CurrentlyActive"
         android:label="Current Active"
         tools:layout="@layout/fragment_currently_active"/>
+    <fragment
+        android:id="@+id/about"
+        android:name="com.example.nitctraveltogether.ui.about"
+        android:label="About"
+        tools:layout="@layout/fragment_about"/>
 
 
 </navigation>
