@@ -81,6 +81,7 @@ public class SlideshowFragment extends Fragment {
     DatabaseReference databaseuseracceptor;
     DatabaseReference databaseuserremove;
     DatabaseReference databaseuserted;
+    AdapterIncomingRequest adapter;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener firebaseAuthListener;
     private SlideshowViewModel slideshowViewModel;
@@ -91,7 +92,7 @@ public class SlideshowFragment extends Fragment {
     ArrayAdapter<String> arrayAdapter;
     //Sending Notification
 
-    private void sendacceptnotification(String contactNo,String tokenemail)
+    private void sendacceptnotification(String contactNo,String tokenemail, int i)
     {
         String email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
         String title="Request accepted";
@@ -112,6 +113,10 @@ public class SlideshowFragment extends Fragment {
                     Toast.makeText(getActivity(),response.body().string(),Toast.LENGTH_SHORT);
                     pb1.dismiss();
                     Toast.makeText(getActivity(),"Accept Notification sent successfully",Toast.LENGTH_SHORT).show();
+                    modelClassList.remove(i);
+                    adapter.notifyItemRemoved(i);
+                    if(modelClassList.size()==0)
+                        msg.setVisibility(View.VISIBLE);
                     mydialog.dismiss();
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -138,7 +143,7 @@ public class SlideshowFragment extends Fragment {
         }
     }
 
-    private void sendrejectnotification(String tokenemail)
+    private void sendrejectnotification(String tokenemail, int i)
     {
         String title="Request rejected";
         String email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
@@ -157,6 +162,10 @@ public class SlideshowFragment extends Fragment {
                     Toast.makeText(getActivity(),response.body().string(),Toast.LENGTH_SHORT);
                     Toast.makeText(getActivity(),"Reject Notification sent successfully",Toast.LENGTH_SHORT).show();
                     pb1.dismiss();
+                    modelClassList.remove(i);
+                    if(modelClassList.size()==0)
+                        msg.setVisibility(View.VISIBLE);
+                    adapter.notifyItemRemoved(i);
                     mydialog.dismiss();
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -177,6 +186,7 @@ public class SlideshowFragment extends Fragment {
 
         final Button btnFollow,accept,reject;
         TextView name, email,age,gender,contactt;
+
         mydialog.setContentView(R.layout.popuprequest);
         txtclose =(TextView) mydialog.findViewById(R.id.txtclose);
         name =(TextView) mydialog.findViewById(R.id.name);
@@ -233,13 +243,8 @@ public class SlideshowFragment extends Fragment {
                 pb1.setIndeterminate(true);
                 pb1.setProgress(0);
                 pb1.show();
-                AdapterIncomingRequest adapter = new AdapterIncomingRequest(modelClassList);
-                recyclerView.setAdapter(adapter);
-                recyclerView.setHasFixedSize(true);
-                modelClassList.remove(i);
-                if(modelClassList.size()==0)
-                    msg.setVisibility(View.VISIBLE);
-                adapter.notifyItemRemoved(i);
+
+
                // pb.dismiss();
                 databaseuser2 = FirebaseDatabase.getInstance().getReference("tokens");
                 databaseuser2.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -254,7 +259,7 @@ public class SlideshowFragment extends Fragment {
                         }
                        // contactt.setText("Contact " + rphone);
                         Toast.makeText(getActivity(), "Go to Current Active to see Requester Details and contact number", Toast.LENGTH_LONG).show();
-                        sendacceptnotification(AcceptorContact,tokenemail);
+                        sendacceptnotification(AcceptorContact,tokenemail, i);
 
                     }
 
@@ -274,13 +279,9 @@ public class SlideshowFragment extends Fragment {
                 pb1.setIndeterminate(true);
                 pb1.setProgress(0);
                 pb1.show();
-                AdapterIncomingRequest adapter = new AdapterIncomingRequest(modelClassList);
-                recyclerView.setAdapter(adapter);
-                recyclerView.setHasFixedSize(true);
-                modelClassList.remove(i);
-                if(modelClassList.size()==0)
-                    msg.setVisibility(View.VISIBLE);
-                adapter.notifyItemRemoved(i);
+
+
+
                // pb.dismiss();
                 databaseuser1 = FirebaseDatabase.getInstance().getReference("tokens");
                 databaseuser1.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -293,7 +294,7 @@ public class SlideshowFragment extends Fragment {
                             if(key.equalsIgnoreCase(tokenemail))
                             { token = value;}
                         }
-                        sendrejectnotification(tokenemail);
+                        sendrejectnotification(tokenemail,i);
                     }
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
@@ -343,7 +344,7 @@ public class SlideshowFragment extends Fragment {
                     pb.dismiss();
                     if ((int) dataSnapshot.getChildrenCount() == 0) {
                         pb.dismiss();
-                        AdapterIncomingRequest adapter = new AdapterIncomingRequest(modelClassList);
+                         adapter = new AdapterIncomingRequest(modelClassList);
                         recyclerView.setAdapter(adapter);
                         recyclerView.setHasFixedSize(true);
                         adapter.notifyDataSetChanged();
@@ -370,7 +371,7 @@ public class SlideshowFragment extends Fragment {
                                 Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
                             }
                         }
-                        AdapterIncomingRequest adapter = new AdapterIncomingRequest(modelClassList);
+                        adapter = new AdapterIncomingRequest(modelClassList);
                         recyclerView.setAdapter(adapter);
                         recyclerView.setHasFixedSize(true);
                         adapter.notifyDataSetChanged();

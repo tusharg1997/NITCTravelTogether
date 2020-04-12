@@ -1,6 +1,7 @@
 package com.example.nitctraveltogether.ui;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
@@ -32,7 +33,8 @@ public class about extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-
+    private TextView howtouse;
+    Dialog mydialog;
     public about() {
         // Required empty public constructor
     }
@@ -70,6 +72,7 @@ public class about extends Fragment {
         View root= inflater.inflate(R.layout.fragment_about, container, false);
         ImageView kapil,tushar,soumya,akshita,abhilasha,profilepic,linkedin,facebook;
         TextView name,email;
+        howtouse = root.findViewById(R.id.use);
         name=root.findViewById(R.id.name);
         email=root.findViewById(R.id.email);
         kapil=root.findViewById(R.id.kapil);
@@ -79,12 +82,20 @@ public class about extends Fragment {
         soumya=root.findViewById(R.id.soumya);
         profilepic=root.findViewById(R.id.profilepic);
         facebook=root.findViewById(R.id.facebook);
+        mydialog = new Dialog(getActivity());
         linkedin=root.findViewById(R.id.linkedin);
         email.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/tusharg1997/NITCTravelTogether"));
                 startActivity(browserIntent);
+            }
+        });
+        howtouse.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+
             }
         });
         kapil.setOnClickListener(new View.OnClickListener() {
