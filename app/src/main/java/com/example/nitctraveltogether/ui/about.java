@@ -1,5 +1,9 @@
 package com.example.nitctraveltogether.ui;
 
+import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -7,9 +11,12 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.nitctraveltogether.R;
+
+import org.w3c.dom.Text;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -61,7 +68,168 @@ public class about extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View root= inflater.inflate(R.layout.fragment_about, container, false);
+        ImageView kapil,tushar,soumya,akshita,abhilasha,profilepic,linkedin,facebook;
+        TextView name,email;
+        name=root.findViewById(R.id.name);
+        email=root.findViewById(R.id.email);
+        kapil=root.findViewById(R.id.kapil);
+        tushar=root.findViewById(R.id.tushar);
+        akshita=root.findViewById(R.id.akshita);
+        abhilasha=root.findViewById(R.id.abhilasha);
+        soumya=root.findViewById(R.id.soumya);
+        profilepic=root.findViewById(R.id.profilepic);
+        facebook=root.findViewById(R.id.facebook);
+        linkedin=root.findViewById(R.id.linkedin);
+        email.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/tusharg1997/NITCTravelTogether"));
+                startActivity(browserIntent);
+            }
+        });
+        kapil.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("ResourceAsColor")
+            @Override
+            public void onClick(View v) {
 
+                name.setText("Name:Kapil Chhipa");
+                email.setTextColor(Color.BLACK);
+                email.setOnClickListener(null);
+                email.setText("Email:kapil_m180265ca@nitc.ac.in");
+                profilepic.setImageResource(R.drawable.kapil);
+                facebook.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.facebook.com/kapilchhipa4"));
+                           startActivity(browserIntent);
+                    }
+                });
+                linkedin.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.linkedin.com/in/kapil-chhipa/"));
+                        startActivity(browserIntent);
+                    }
+                });
+                facebook.setVisibility(View.VISIBLE);
+                linkedin.setVisibility(View.VISIBLE);
+            }
+        });
+        tushar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                name.setText("Name:Tushar Gupta");
+                email.setText("Email:tushar_m180499ca@nitc.ac.in");
+                email.setTextColor(Color.BLACK);
+                email.setOnClickListener(null);
+                profilepic.setImageResource(R.drawable.tushar);
+                facebook.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.facebook.com/tusharg1997"));
+                        startActivity(browserIntent);
+                    }
+                });
+                linkedin.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.linkedin.com/in/tushar-gupta-b7232a67/"));
+                        startActivity(browserIntent);
+                    }
+                });
+                facebook.setVisibility(View.VISIBLE);
+                linkedin.setVisibility(View.VISIBLE);
+            }
+        });
+        abhilasha.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                name.setText("Name:Abhilasha Sharma");
+                email.setText("Email:abhilasha_m180275ca@nitc.ac.in");
+                email.setTextColor(Color.BLACK);
+                email.setOnClickListener(null);
+                profilepic.setImageResource(R.drawable.abhilasha);
+                facebook.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.facebook.com/AbhilashaSharma2109"));
+                        startActivity(browserIntent);
+                    }
+                });
+                linkedin.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.linkedin.com/in/abhilasha-sharma-83141a171/"));
+                        startActivity(browserIntent);
+                    }
+                });
+                facebook.setVisibility(View.VISIBLE);
+                linkedin.setVisibility(View.VISIBLE);
+            }
+        });
+        akshita.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                name.setText("Name:Akshita Priyadarshi");
+                email.setOnClickListener(null);
+                email.setText("Email:akshita_m180251ca@nitc.ac.in");
+                email.setTextColor(Color.BLACK);
+                profilepic.setImageResource(R.drawable.akshita);
+                facebook.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.facebook.com/akshita.priyadarshi.1"));
+                        startActivity(browserIntent);
+                    }
+                });
+                linkedin.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.linkedin.com/in/akshita-priydarshini-41b7b5185/"));
+                        startActivity(browserIntent);
+                    }
+                });
+                facebook.setVisibility(View.VISIBLE);
+                linkedin.setVisibility(View.VISIBLE);
+            }
+        });
+        soumya.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                email.setOnClickListener(null);
+                name.setText("Name:Soumya Parashar");
+                email.setText("Email:soumya_m180260ca@nitc.ac.in");
+                email.setTextColor(Color.BLACK);
+                profilepic.setImageResource(R.drawable.soumya);
+                facebook.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.facebook.com/soumya.parashar.96"));
+                        startActivity(browserIntent);
+                    }
+                });
+                linkedin.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.linkedin.com/in/soumya-parashar-33b119174/"));
+                        startActivity(browserIntent);
+                    }
+                });
+                facebook.setVisibility(View.VISIBLE);
+                linkedin.setVisibility(View.VISIBLE);
+
+            }
+        });
+//        ImageView linkedin=root.findViewById(R.id.linkedin);
+//        linkedin.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.google.com"));
+//                startActivity(browserIntent);
+//
+//            }
+//        });
         return root;
     }
 }

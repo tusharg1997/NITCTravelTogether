@@ -188,7 +188,9 @@ public class SlideshowFragment extends Fragment {
         gender.setText(rgender);
         email.setText("Email: "+ remail);
         txtclose.setText("X");
-        name.setText("Name : "+ rfirstname+rlastname);
+        rfirstname=rfirstname.substring(0, 1).toUpperCase() + rfirstname.substring(1);
+        rlastname=rlastname.substring(0, 1).toUpperCase() + rlastname.substring(1);
+        name.setText("Name : "+ rfirstname+" "+rlastname);
         txtclose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -347,6 +349,7 @@ public class SlideshowFragment extends Fragment {
                         adapter.notifyDataSetChanged();
                         msg.setVisibility(View.VISIBLE);
                     } else {
+                        int f=0;
                         for (DataSnapshot ds : dataSnapshot.getChildren()) {
                             try {
                                 String email = ds.getKey();
@@ -358,6 +361,7 @@ public class SlideshowFragment extends Fragment {
                                 long diffInHours = TimeUnit.MILLISECONDS.toHours(duration);
                                 if (diffInHours >= 1)
                                     continue;
+                                f=1;
                                // Toast.makeText(getActivity(), ds.getKey(), Toast.LENGTH_SHORT).show();
                                 String times[] = time.split(" ", 2);
                                 modelClassList.add(new ModelClassIncomingRequest("Email: " + email + "@nitc.ac.in", "Time: " + times[1]));
@@ -371,6 +375,8 @@ public class SlideshowFragment extends Fragment {
                         recyclerView.setHasFixedSize(true);
                         adapter.notifyDataSetChanged();
                         msg.setVisibility(View.INVISIBLE);
+                        if(f==0)
+                            msg.setVisibility(View.VISIBLE);
                         pb.dismiss();
                         adapter.setOnItemClickListener(new AdapterIncomingRequest.OnItemClickListener() {
                             @Override
