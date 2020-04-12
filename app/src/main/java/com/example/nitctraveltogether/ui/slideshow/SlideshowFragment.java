@@ -1,7 +1,9 @@
 package com.example.nitctraveltogether.ui.slideshow;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.ColorSpace;
@@ -92,7 +94,7 @@ public class SlideshowFragment extends Fragment {
     ArrayAdapter<String> arrayAdapter;
     //Sending Notification
 
-    private void sendacceptnotification(String contactNo,String tokenemail, int i)
+    private void sendacceptnotification(String contactNo,String tokenemail, int i,String name)
     {
         String email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
         String title="Request accepted";
@@ -118,6 +120,16 @@ public class SlideshowFragment extends Fragment {
                     if(modelClassList.size()==0)
                         msg.setVisibility(View.VISIBLE);
                     mydialog.dismiss();
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    builder.setTitle("Request Accepted").setMessage("You have successfully accepted the request of "+name+".\nPlease go to current active option to see your co-traveller details.")
+                            .setCancelable(true)
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    //do things
+                                }
+                            });
+                    AlertDialog alert = builder.create();
+                    alert.show();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -235,6 +247,8 @@ public class SlideshowFragment extends Fragment {
 
             }
         });
+        String finalRlastname = rlastname;
+        String finalRfirstname = rfirstname;
         accept.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -258,8 +272,8 @@ public class SlideshowFragment extends Fragment {
                             { token = value;}
                         }
                        // contactt.setText("Contact " + rphone);
-                        Toast.makeText(getActivity(), "Go to Current Active to see Requester Details and contact number", Toast.LENGTH_LONG).show();
-                        sendacceptnotification(AcceptorContact,tokenemail, i);
+                        //Toast.makeText(getActivity(), "Go to Current Active to see Requester Details and contact number", Toast.LENGTH_LONG).show();
+                        sendacceptnotification(AcceptorContact,tokenemail, i, finalRfirstname +" "+ finalRlastname);
 
                     }
 
