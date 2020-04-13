@@ -82,6 +82,8 @@ public class CurrentlyActive extends Fragment {
         contact = (TextView) mydialog.findViewById(R.id.contact);
         contact.setText("Contact: " + rphone);
         email.setText("Email: " + remail);
+        rfirstname=rfirstname.substring(0, 1).toUpperCase() + rfirstname.substring(1);
+        rlastname=rlastname.substring(0, 1).toUpperCase() + rlastname.substring(1);
         name.setText("Name : " + rfirstname+" "+rlastname);
         txtclose.setText("X");
         age.setText(rage);

@@ -114,6 +114,7 @@ public class about extends Fragment {
                 mydialog.show();
             }
         });
+
         kapil.setOnClickListener(new View.OnClickListener() {
             @SuppressLint("ResourceAsColor")
             @Override
@@ -248,15 +249,20 @@ public class about extends Fragment {
 
             }
         });
-//        ImageView linkedin=root.findViewById(R.id.linkedin);
-//        linkedin.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.google.com"));
-//                startActivity(browserIntent);
-//
-//            }
-//        });
+        mydialog.setContentView(R.layout.howtouseinfo);
+        //TextView txtclose = (TextView) mydialog.findViewById(R.id.txtclose);
+        TextView tt = mydialog.findViewById(R.id.howtouse);
+        // Button ok = mydialog.findViewById(R.id.ok);
+        String s="NITC Travel Together is an android application developed using Android Studio, Java, XML, and Firebase."+"\n"+"This app is made exclusively for NITC students so that they can travel together and share the fare as well as each other's company while traveling by offering lift to others or by requesting others for lift."+"\n"+" This app has Google Map API integrated which not only shows the current position of the logged-in user but also the position of other users which are in the radius of 5km, also the location marker shows the name of that user." +"\n"+ "A user can offer a lift by entering his destination, vehicle type and number of available seats while other users who do not want to offer lift but only want to travel with others can select the lift from the list of people who offered the lift and can send the request, the person who offered the lift gets a notification with the name and phone number of the person who has requested a lift from him, he can either accept the request which sends the notification to another person with his phone number or he can reject the request which will send the reject notification to the other person. The notification thing is developed using Rest API and firebase." + "\n"+ "Users can also rate each other by searching their profile using email id and also users can report a person if he/she thinks that the person is intolerable and must be reported.\n\n";
+        tt.setText(s);
+                /*txtclose.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mydialog.dismiss();
+                    }
+                });*/
+        mydialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        mydialog.show();
         return root;
     }
 }

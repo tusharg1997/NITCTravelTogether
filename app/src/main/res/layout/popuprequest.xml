@@ -3,7 +3,7 @@
     android:layout_width="350dp"
     android:layout_height="250dp"
     android:layout_gravity="center"
-    android:background="#7B7B7C"
+    android:background="@color/design_default_color_secondary"
     android:orientation="vertical"
     android:padding="5dp">
 
@@ -29,7 +29,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Name"
-            android:textColor="#FFFFFF"
+            android:textColor="#0C0C0C"
             android:textSize="20dp" />
 
         <TextView
@@ -37,7 +37,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Email"
-            android:textColor="#F4F4F4"
+            android:textColor="#090909"
             android:textSize="20dp" />
 
 
@@ -46,7 +46,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Gender"
-            android:textColor="#EDE9E9"
+            android:textColor="#0C0C0C"
             android:textSize="20dp"></TextView>
 
         <TextView
@@ -54,17 +54,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Age"
-            android:textColor="#FFF6F6"
+            android:textColor="#100F0F"
             android:textSize="20dp"></TextView>
 
-<!--        <TextView-->
-<!--            android:id="@+id/number"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:text="Contact No: ********** "-->
-<!--            android:textColor="#DCCDCD"-->
-<!--            android:textSize="20dp"></TextView>-->
-
+        <!--        <TextView-->
+        <!--            android:id="@+id/number"-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:text="Contact No: ********** "-->
+        <!--            android:textColor="#DCCDCD"-->
+        <!--            android:textSize="20dp"></TextView>-->
 
 
     </LinearLayout>
@@ -83,7 +82,7 @@
             android:layout_marginLeft="40dp"
             android:layout_marginTop="10dp"
 
-            android:background="#878787"
+            android:background="#0C0C0C"
             android:text="Accept"
             android:textColor="@color/white" />
 
@@ -94,7 +93,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginLeft="25dp"
             android:layout_marginTop="10dp"
-            android:background="#878787"
+            android:background="#0B0A0A"
             android:text="Reject"
             android:textColor="@color/white" />
     </androidx.appcompat.widget.LinearLayoutCompat>

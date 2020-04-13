@@ -3,7 +3,7 @@
     android:layout_width="350dp"
     android:layout_height="200dp"
     android:layout_gravity="center"
-    android:background="#7B7B7C"
+    android:background="@color/design_default_color_secondary"
     android:orientation="vertical"
     android:padding="5dp">
 
@@ -29,7 +29,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Name"
-            android:textColor="@color/design_default_color_background"
+            android:textColor="@color/design_default_color_on_secondary"
             android:textSize="20dp" />
 
         <TextView
@@ -37,13 +37,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Email"
-            android:textColor="#FFFFFF"
+            android:textColor="#121111"
             android:textSize="20dp" />
-
-
-
-
-
 
 
         <TextView
@@ -51,7 +46,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Gender"
-            android:textColor="#FFFCFC"
+            android:textColor="#0C0C0C"
             android:textSize="20dp"></TextView>
 
         <TextView
@@ -59,19 +54,19 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Age"
-            android:textColor="#FFFFFF"
+            android:textColor="#171616"
             android:textSize="20dp"></TextView>
+
         <TextView
             android:id="@+id/contact"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Contact"
-            android:textColor="#E8E8E8"
+            android:textColor="#0E0E0E"
             android:textSize="20sp" />
 
 
     </LinearLayout>
-
 
 
 </LinearLayout>
