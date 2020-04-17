@@ -62,7 +62,7 @@ public class logout extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
 
         }
-        Toast.makeText(getActivity(), "inside oncreateview", Toast.LENGTH_LONG).show();
+       // Toast.makeText(getActivity(), "inside oncreateview", Toast.LENGTH_LONG).show();
     }
 
 

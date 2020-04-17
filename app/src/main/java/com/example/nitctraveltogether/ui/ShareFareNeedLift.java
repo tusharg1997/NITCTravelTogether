@@ -121,7 +121,7 @@ public class ShareFareNeedLift extends Fragment {
 
     private void sendnotification(String sender)
     {
-        String title="Request for Share Fare from "+sender;
+        String title="Request for Share Fare\n from "+sender;
         String body="I want to travel with you";
         Toast.makeText(getActivity(), "Inside send notification, token:"+token, Toast.LENGTH_SHORT);
         //Hosting Url-https://nitctraveltogether-a535a.firebaseapp.com

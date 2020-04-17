@@ -39,9 +39,12 @@ public class  MainActivity extends AppCompatActivity implements  View.OnKeyListe
     @Override
     public void onClick(View v) {
         if(v.getId() == R.id.main_activity ){
-            InputMethodManager inputMethodManager =(InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-            inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
-
+            try {
+                InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+                inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
     @Override
@@ -72,8 +75,9 @@ public class  MainActivity extends AppCompatActivity implements  View.OnKeyListe
     public void register(View view)
     {
         Intent i = new Intent(this, Registration.class );
+       // i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(i);
-
+        finish();
     }
     boolean validateInput(String email, String pass){
         boolean flag = true;

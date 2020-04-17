@@ -305,7 +305,7 @@ public class GalleryFragment extends Fragment {
     //Notification Code
     private void sendnotification(String sender)
     {
-        String title="Request for lift from "+sender;
+        String title="Request for lift from \n"+sender;
         String body="I want to travel with you";
         Toast.makeText(getActivity(), "Inside send notification, token:"+token, Toast.LENGTH_SHORT);
         //Hosting Url-https://nitctraveltogether-a535a.firebaseapp.com

@@ -12,32 +12,37 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginStart="121dp"
-        android:layout_marginLeft="121dp"
-        android:layout_marginTop="60dp"
+        android:layout_marginStart="100dp"
+        android:layout_marginLeft="100dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="121dp"
         android:layout_marginRight="121dp"
+        android:gravity="center_vertical"
         android:onClick="sendtologin"
         android:text="@string/signin_redirect"
         android:textColor="@color/gray"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/rbtn" />
+        app:layout_constraintTop_toBottomOf="@+id/rbtn"
+        app:layout_constraintVertical_bias="0.176" />
 
     <Button
         android:id="@+id/rbtn"
-        android:layout_width="386dp"
-        android:layout_height="45dp"
-        android:layout_marginBottom="132dp"
+        android:layout_width="340dp"
+        android:layout_height="57dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="100dp"
         android:background="@drawable/btnsignup_gradient"
         android:onClick="register"
         android:text="@string/sign_upReg"
         android:textColor="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.48"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintHorizontal_bias="0.64"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/rage" />
 
     <AutoCompleteTextView
         android:id="@+id/rage"
@@ -45,7 +50,8 @@
         android:layout_height="40dp"
         android:layout_marginStart="35dp"
         android:layout_marginLeft="35dp"
-        android:layout_marginBottom="36dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
         android:background="@drawable/rounded_rect"
         android:drawablePadding="10dp"
         android:hint="@string/age"
@@ -57,8 +63,9 @@
         android:textSize="15sp"
         app:layout_constraintBottom_toTopOf="@+id/rbtn"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/radioGroup" />
 
     <AutoCompleteTextView
         android:id="@+id/rphone"
@@ -66,7 +73,7 @@
         android:layout_height="40dp"
         android:layout_marginStart="35dp"
         android:layout_marginLeft="35dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginBottom="16dp"
         android:background="@drawable/rounded_rect"
         android:drawablePadding="10dp"
         android:hint="@string/phone"
@@ -76,6 +83,7 @@
         android:textColor="@color/white"
         android:textColorHint="@color/gray"
         android:textSize="15sp"
+        app:layout_constraintBottom_toTopOf="@+id/radioGroup"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -90,6 +98,7 @@
         android:layout_marginBottom="24dp"
         android:background="@drawable/rounded_rect"
         android:drawablePadding="10dp"
+        android:gravity="center_vertical"
         android:hint="@string/passwordReg"
         android:inputType="textPassword"
         android:paddingStart="10dp"
@@ -109,14 +118,16 @@
         android:layout_height="37dp"
         android:layout_marginStart="35dp"
         android:layout_marginLeft="85dp"
-        android:layout_marginTop="80dp"
+        android:layout_marginTop="32dp"
         android:layout_marginBottom="24dp"
         android:background="@drawable/rounded_rect"
         android:drawablePadding="10dp"
+        android:gravity="center_vertical"
         android:hint="NITC Email"
         android:inputType="textEmailAddress"
         android:paddingStart="10dp"
         android:paddingEnd="10dp"
+        android:scrollbarThumbHorizontal="@color/white"
         android:textColor="@color/white"
         android:textColorHint="@color/gray"
         android:textSize="15sp"
@@ -170,12 +181,15 @@
         app:layout_constraintTop_toBottomOf="@+id/rpass" />
 
     <RadioGroup
-        android:layout_width="359dp"
-        android:layout_height="54dp"
+        android:id="@+id/radioGroup"
+        android:layout_width="287dp"
+        android:layout_height="66dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:gravity="center_horizontal|center_vertical"
         android:orientation="horizontal"
         app:layout_constraintBottom_toTopOf="@+id/rage"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.673"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/rphone"
         app:layout_constraintVertical_bias="0.545"
@@ -185,17 +199,17 @@
             android:id="@+id/rgenderm"
             android:layout_width="123dp"
             android:layout_height="54dp"
+            android:buttonTint="#FF4081"
             android:checked="true"
             android:text="Male"
-            android:buttonTint="#FF4081"
             android:textColor="#605454" />
 
         <RadioButton
             android:id="@+id/rgenderf"
             android:layout_width="156dp"
             android:layout_height="match_parent"
-            android:text="Female"
             android:buttonTint="#FF4081"
+            android:text="Female"
             android:textColor="#5A4A4A" />
 
     </RadioGroup>

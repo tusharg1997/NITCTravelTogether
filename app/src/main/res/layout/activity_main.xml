@@ -28,18 +28,21 @@
         android:id="@+id/ivSignIn"
         android:layout_width="382dp"
         android:layout_height="30dp"
+        android:layout_marginTop="8dp"
         android:layout_marginBottom="10dp"
         android:contentDescription="Sign in text on registration activity"
         android:src="@drawable/sign_in"
         app:layout_constraintBottom_toTopOf="@+id/email"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.448"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView2" />
 
     <AutoCompleteTextView
         android:id="@+id/email"
         android:layout_width="359dp"
         android:layout_height="54dp"
+        android:layout_marginTop="8dp"
         android:background="@drawable/rounded_rect"
         android:drawableStart="@drawable/icon_person"
         android:drawableLeft="@drawable/icon_person"
@@ -53,12 +56,14 @@
         android:textSize="15sp"
         app:layout_constraintBottom_toTopOf="@+id/password"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ivSignIn" />
 
     <AutoCompleteTextView
         android:id="@+id/password"
         android:layout_width="359dp"
         android:layout_height="54dp"
+        android:layout_marginTop="8dp"
         android:layout_marginBottom="20dp"
         android:background="@drawable/rounded_rect"
         android:drawableStart="@drawable/icon_password"
@@ -73,30 +78,35 @@
         android:textSize="15sp"
         app:layout_constraintBottom_toTopOf="@+id/signin"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/email" />
 
     <Button
         android:id="@+id/signin"
         android:layout_width="300dp"
         android:layout_height="64dp"
-        android:layout_marginBottom="132dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="16dp"
         android:background="@drawable/btnsignin_gradient"
         android:onClick="login"
         android:text="@string/sign_inLog"
         android:textColor="#FFFFFF"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/register"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.495"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/password" />
 
     <ImageView
         android:id="@+id/imageView2"
         android:layout_width="195dp"
         android:layout_height="214dp"
-        android:layout_marginBottom="120dp"
+        android:layout_marginTop="33dp"
         app:layout_constraintBottom_toTopOf="@+id/ivSignIn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0"
         app:srcCompat="@drawable/appicon" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
