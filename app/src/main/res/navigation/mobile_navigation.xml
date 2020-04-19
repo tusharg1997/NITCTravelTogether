@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/nav_home"
-        android:name="com.example.nitctraveltogether.ui.home.HomeFragment"
+        android:name="com.nitc.nitctraveltogether.ui.home.HomeFragment"
         android:label="@string/Offerlift"
         tools:layout="@layout/fragment_home">
 
@@ -17,7 +17,7 @@
     </fragment>
     <fragment
         android:id="@+id/nav_home_second"
-        android:name="com.example.nitctraveltogether.ui.home.HomeSecondFragment"
+        android:name="com.nitc.nitctraveltogether.ui.home.HomeSecondFragment"
         android:label="@string/home_second"
         tools:layout="@layout/fragment_home_second">
         <action
@@ -31,49 +31,49 @@
 
     <fragment
         android:id="@+id/needlift"
-        android:name="com.example.nitctraveltogether.ui.gallery.GalleryFragment"
+        android:name="com.nitc.nitctraveltogether.ui.gallery.GalleryFragment"
         android:label="Current offers of lift"
         tools:layout="@layout/fragment_gallery" />
     <fragment
         android:id="@+id/logout"
-        android:name="com.example.nitctraveltogether.ui.logout"
+        android:name="com.nitc.nitctraveltogether.ui.logout"
         android:label="@string/logout"
         tools:layout="@layout/fragment_logout" />
     <fragment
         android:id="@+id/map"
-        android:name="com.example.nitctraveltogether.ui.MapFragment"
+        android:name="com.nitc.nitctraveltogether.ui.MapFragment"
         android:label="@string/map"
         tools:layout="@layout/fragment_map" />
     <fragment
         android:id="@+id/reportandrating"
-        android:name="com.example.nitctraveltogether.ui.ReportAndRating"
+        android:name="com.nitc.nitctraveltogether.ui.ReportAndRating"
         android:label="Search Profile"
         tools:layout="@layout/fragment_report_and_rating">
     </fragment>
     <fragment
         android:id="@+id/sharefareofferlift"
-        android:name="com.example.nitctraveltogether.ui.ShareFareOfferLift"
+        android:name="com.nitc.nitctraveltogether.ui.ShareFareOfferLift"
         android:label="ShareFare OfferLift"
         tools:layout="@layout/fragment_share_fare_offer_lift">
     </fragment>
     <fragment
         android:id="@+id/sharefareneedlift"
-        android:name="com.example.nitctraveltogether.ui.ShareFareNeedLift"
+        android:name="com.nitc.nitctraveltogether.ui.ShareFareNeedLift"
         android:label="ShareFare NeedLift"
         tools:layout="@layout/fragment_share_fare_need_lift"/>
     <fragment
         android:id="@+id/incomingrequest"
-        android:name="com.example.nitctraveltogether.ui.slideshow.SlideshowFragment"
+        android:name="com.nitc.nitctraveltogether.ui.slideshow.SlideshowFragment"
         android:label="Incoming Requests"
         tools:layout="@layout/fragment_slideshow"/>
     <fragment
         android:id="@+id/currentlyactive"
-        android:name="com.example.nitctraveltogether.ui.CurrentlyActive"
+        android:name="com.nitc.nitctraveltogether.ui.CurrentlyActive"
         android:label="Current Active"
         tools:layout="@layout/fragment_currently_active"/>
     <fragment
         android:id="@+id/about"
-        android:name="com.example.nitctraveltogether.ui.about"
+        android:name="com.nitc.nitctraveltogether.ui.about"
         android:label="About"
         tools:layout="@layout/fragment_about"/>
 
